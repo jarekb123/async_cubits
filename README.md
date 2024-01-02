@@ -44,7 +44,7 @@ class GetUserCubit extends FutureCubit<User> {
 
 In your UI you can use BlocProvider and BlocBuilder to load and access the data.
 
-```
+```dart
 BlocProvider(
   create: (context) => GetUserCubit(
     context.read<UserRepository>(),
@@ -65,7 +65,7 @@ BlocProvider(
 
 If you want to trigger refresh of the data you can call the `refresh` method on the cubit.
 
-```
+```dart
 ElevatedButton(
   onPressed: () => context.read<GetUserCubit>().refresh(),
   child: Text('Refresh'),
@@ -81,7 +81,7 @@ and no loading indicator will be shown when the cubit is refreshed.
 
 To load/refresh the data with new arguments that are passed to the `future` method, use `FutureWithArgsCubit`.
 
-```
+```dart
 class GetUserByIdCubit extends FutureWithArgsCubit<int, User> {
   final UserRepository _userRepository;
 
@@ -94,13 +94,13 @@ class GetUserByIdCubit extends FutureWithArgsCubit<int, User> {
 
 and then call `load` or `refresh` with the arguments.
 
-```
+```dart
 context.read<GetUserByIdCubit>().load(1);
 ```
 
 or
 
-```
+```dart
 context.read<GetUserByIdCubit>().refresh(1);
 ```
 
@@ -109,7 +109,7 @@ context.read<GetUserByIdCubit>().refresh(1);
 StreamCubits are a type of Cubit that can be used to listen to async stream of events.
 E.g. listening to a stream of data from a websocket.
 
-```
+```dart
 class NewMessageCubit extends StreamCubit<Message> {
   final MessageRepository _messageRepository;
 
