@@ -40,7 +40,15 @@ class GetUserCubit extends FutureCubit<User> {
 }
 ```
 
-#### Integrating with UI widgets
+#### Load the async data
+
+To trigger the async data fetching, use `load()` method.
+
+When the `load()` is called, the cubit emits in following order:
+
+* `AsyncValue.loading()`
+* if the operation succeeds and data is avaialable `AsyncValue.data(fetchedData)`
+* if the operation fails - `AsyncValue.error(error, stackTrace)`
 
 In your UI you can use BlocProvider and BlocBuilder to load and access the data.
 
@@ -72,14 +80,20 @@ ElevatedButton(
 ),
 ```
 
-By default, the `AsyncValue.when` method will use `data` callback if the data was previously fetched.
+
+When the `refresh()` is called, the cubit emits state in following order that:
+
+* `isLoading` is `true` and `value` contains the previously loaded value, which helps to show the UI with previously loaded content, then immediately switch to new value without showing loading indicator. If you want to show loading indicator instead, set `skipLoadingOnRefresh` to `false` when using `AsyncValue.when`
+* if the operation succeeds and new value is available, then the state's `isLoading` changes to `false` and `value` contains new value
+* if the operation fails - state's `isLoading` changes to `false`, `error` and `stackTrace` is not null, and `value` contains previously loaded value. That behavior enables showing UI with previously loaded content with a refresh error message (to achieve that, use `skipError` in `AsyncValue.when` method)
+
 
 So according to the example above, if the data was fetched successfully, the `Text(user.name)` will be rendered
 and no loading indicator will be shown when the cubit is refreshed.
 
 #### Loading/refreshing with new arguments
 
-To load/refresh the data with new arguments that are passed to the `future` method, use `FutureWithArgsCubit`.
+To load/refresh the data with new arguments that are passed to the `future` method, use `FutureWithArgsCubit`. The behaviour of this cubit is similar to `FutureCubit`.
 
 ```dart
 class GetUserByIdCubit extends FutureWithArgsCubit<int, User> {
