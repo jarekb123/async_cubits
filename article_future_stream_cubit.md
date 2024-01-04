@@ -235,7 +235,7 @@ BlocProvider(
 )
 ```
 
-3. `StreamCubit` emits `AsyncValue`, so listening to state changes is the same as in `FutureCubit`
+3. `StreamCubit` emits `AsyncValue`, so listening to state changes is similar to that in `FutureCubit`
 
 ```dart
 class NewMessageWidget extends StatelessWidget {
@@ -255,9 +255,9 @@ class NewMessageWidget extends StatelessWidget {
 
 # See more
 
-As you can see, the `FutureCubit` or `StreamCubit` significantly 
-reduces the amount of code used to handle states of async data.
+As you can observe, the `FutureCubit` or `StreamCubit` significantly
+reduces the amount of code needed to handle states for asynchronous data.
 
-Go check the package on [pub.dev](https://pub.dev/packages/async_cubits) and [GitHub](https://github.com/jarekb123/async_cubits).
+Check out the package on [pub.dev](https://pub.dev/packages/async_cubits) and [GitHub](https://github.com/jarekb123/async_cubits).
 
-In the next article I'll describe the usage of `MutationCubit` which is also a part of `async_cubits` package.
+In the next article, I will describe the usage of `MutationCubit`, which is also a part of the `async_cubits` package.
