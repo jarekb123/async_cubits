@@ -73,15 +73,12 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
       return;
     }
 
-    emit(const MutationState.loading());
+    emit(MutationState<O>.loading());
     try {
       final result = await mutation(input);
-      emit(MutationState.success(result));
-    } on CancelMutationException catch (_) {
-      AsyncCubitsLogger.info(debugKey, 'Mutation cancelled');
-      emit(const MutationState.idle());
+      emit(MutationState<O>.success(result));
     } catch (e, stackTrace) {
-      emit(MutationState.failure(e, stackTrace));
+      emit(MutationState<O>.failure(e, stackTrace));
     }
   }
 
@@ -90,9 +87,6 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
     AsyncCubitsLogger.info(debugKey, 'Mutation successful');
   }
 }
-
-/// Throw it in the [MutationCubit.mutation] method to cancel the mutation.
-class CancelMutationException implements Exception {}
 
 /// The state of the [MutationCubit].
 @freezed
