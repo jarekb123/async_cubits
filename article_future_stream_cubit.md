@@ -79,7 +79,6 @@ The package [`async_cubits`](https://github.com/jarekb123/async_cubits) contains
 > `MutationCubit` will be described in next article.
 
 
-
 ## How to use `FutureCubit`?
 
 1. To create `FutureCubit` you just need to implement its `future` method.
@@ -156,7 +155,7 @@ class UserDataCubit extends FutureCubit<User> {
   UserDataCubit(this._repository, {required this.userId});
   
   @override
-  Future<User> future() => _userRepository.getUserById(userId);
+  Future<User> future() => _repository.getUserById(userId);
 }
 ```
 
@@ -186,7 +185,7 @@ class UserDataCubit extends FutureWithArgsCubit<String, User> {
   UserDataCubit(this._repository);
   
   @override
-  Future<User> future(String userId) => _userRepository.getUserById(userId);
+  Future<User> future(String userId) => _repository.getUserById(userId);
 }
 ```
 

@@ -49,7 +49,7 @@ class GetUserCubit extends FutureCubit<User> {
 
 To trigger the async data fetching, use `load()` method.
 
-When the `load()` is called, the cubit emits in following order:
+When the `load()` is called, the cubit emits `AsyncValue<T>` in following order:
 
 * `AsyncValue.loading()`
 * if the operation succeeds and data is avaialable `AsyncValue.data(fetchedData)`
@@ -86,7 +86,7 @@ ElevatedButton(
 ```
 
 
-When the `refresh()` is called, the cubit emits state in following order that:
+When the `refresh()` is called, the cubit emits `AsyncValue<T>` in following order that:
 
 * `isLoading` is `true` and `value` contains the previously loaded value, which helps to show the UI with previously loaded content, then immediately switch to new value without showing loading indicator. If you want to show loading indicator instead, set `skipLoadingOnRefresh` to `false` when using `AsyncValue.when`
 * if the operation succeeds and new value is available, then the state's `isLoading` changes to `false` and `value` contains new value
@@ -123,7 +123,7 @@ or
 context.read<GetUserByIdCubit>().refresh(1);
 ```
 
-### Creating a StreamCubit
+### Using a StreamCubit
 
 StreamCubits are a type of Cubit that can be used to listen to async stream of events.
 E.g. listening to a stream of data from a websocket.
@@ -136,6 +136,24 @@ class NewMessageCubit extends StreamCubit<Message> {
   
   @override
   Stream<Message> dataStream() => _messageRepository.newMessageStream();
+}
+```
+
+`StreamCubit` emits `AsyncValue<T>`, so listening to state changes is similar to that in `FutureCubit`
+
+```dart
+class NewMessageWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.watch<NewMessageCubit>();
+    final state = cubit.state;
+
+    return state.when(
+      loading: LoadingWidget.new,
+      error: (error, stackTrace) => ErrorWidget(error),
+      data: (data) => LoadedMessage(data),
+    );
+  }
 }
 ```
 
