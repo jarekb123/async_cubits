@@ -1,6 +1,6 @@
 name: async_cubits
 description: A set of cubits that can be used to handle async operations in a simple, consistent way.
-version: 0.1.0+2
+version: 0.2.0
 repository: https://github.com/jarekb123/async_cubits
 
 environment:

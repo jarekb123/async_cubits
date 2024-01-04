@@ -157,6 +157,36 @@ class NewMessageWidget extends StatelessWidget {
 }
 ```
 
+### Using a MutationCubit
+
+The `MutationCubit` is a specialized cubit designed to handle asynchronous mutations. It facilitates the execution of asynchronous tasks, managing various states throughout the process, including loading, success, and failure. Typically it's used to mutate the state of the backend, local database, etc.
+
+Example:
+
+```dart
+class MyMutationCubit extends MutationCubit<String, int> {
+  @override
+  Future<int> mutation(String input) async {
+    // Perform asynchronous mutation logic here
+    // e.g., make an API call, update database, etc.
+    return 42; // Replace with actual result
+  }
+}
+```
+
+To invoke the mutation, use `invoke` method:
+
+```dart
+cubit.invoke('input');
+```
+
+`MutationCubit` emits `MutationState` which can be:
+
+* Idle State: Initially, the cubit is in the `MutationState.idle` state, indicating that the mutation has not been invoked.
+* Loading State: When the mutation method is called, the cubit transitions to the `MutationState.loading` state.
+* Success State: Upon successful completion of the mutation, the cubit enters the `MutationState.success` state.
+* Failure State: If the mutation encounters an error, the cubit transitions to the `MutationState.failure` state.
+
 [flutter_install_link]: https://docs.flutter.dev/get-started/install
 
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
