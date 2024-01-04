@@ -5,6 +5,11 @@
 
 A package that provides set of cubits for making asynchronous operations in simpler, consistent way.
 
+
+### Inspiration
+
+This package is inspired by Riverpod's `FutureProvider` and `StreamProvider`. The `AsyncValue` class is mostly the same as in `riverpod` package. Please check great work done in the `riverpod` package.
+
 ## Installation 💻
 
 **❗ In order to start using Async Cubits you must have the [Flutter SDK][flutter_install_link] installed on your

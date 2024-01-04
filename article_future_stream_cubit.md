@@ -5,14 +5,13 @@ In the world of Flutter development, managing asynchronous operations can be tri
 **Check existing solutions**
 * `ObservableFuture`, `ObservableStream` in MobX
 * `FutureProvider`, `StreamProvider`, etc. in Riverpod
-* etc.
 
 So why another solution?
 
 # Motivation
 
 * We wanted to use it in the currently developed app. The app we developed extensively utilized bloc and cubits, so switching the state management solution could potentially introduce new bugs.
-* The team was predominantly experienced in utilizing the bloc package.
+* The team was predominantly experienced in utilizing the `bloc` package.
 * There is no widely recognized, consistent, abstract way of handling asynchronous operations that removes boilerplate logic for managing loading, error, and success states using bloc/cubit.
 
 # Research 
@@ -69,12 +68,17 @@ class UserDataCubit extends Cubit<UserDataState> {
 
 As we can see most of the code is not connected to the business logic, but it's a boilerplate code for handling async fetch operation. Even in the small app, this repeated logic will appear several times, so it's better to handle them in a consistent way.
 
-# Solution - `async_cubits`
+# `async_cubits` package
 
-The package `async_cubits` contains a set of cubits:
+The package [`async_cubits`](https://github.com/jarekb123/async_cubits) contains a set of cubits:
 
-* `FutureCubit` - gathers logic that is responsible for handling loading, error, and success states and provides methods for reloading and seamlessly refreshing data
-* `StreamCubit` - gathers logic that is responsible for handling loading, error, and success states for async `Stream` events
+* `FutureCubit` - implements logic for handling loading, error, and success states and provides methods for reloading and seamlessly refreshing data. Typically used to fetch data from some external data source (eg. REST API, GraphQL, local database).
+* `StreamCubit` - implements logic for handling loading, error, and success states for async `Stream` events. Typically used when the app uses reactive data sources (eg. listenening to Firestore's document changes).
+* `MutationCubit` - implements logic for handling async operations that are invoked by some side effect, eg. when a user taps some button. Typically used to mutate state of the backend.
+
+> `MutationCubit` will be described in next article.
+
+
 
 ## How to use `FutureCubit`?
 
@@ -205,3 +209,55 @@ and to refresh with new arguments use:
 cubit.refresh(newUserId);
 ```
 
+## How to use `StreamCubit`?
+
+1. Implement `dataStream` method 
+
+```dart
+class NewMessageCubit extends StreamCubit<Message> {
+  final MessageRepository _messageRepository;
+
+  GetMessagesCubit(this._messageRepository);
+  
+  @override
+  Stream<Message> dataStream() => _messageRepository.newMessageStream();
+}
+```
+
+2. Subscribe
+
+```dart
+BlocProvider(
+  create: (context) => NewMessageCubit(
+    context.read<MessageRepository>(),
+  )..subscribe(),
+  child: NewMessageWidget(),
+)
+```
+
+3. `StreamCubit` emits `AsyncValue`, so listening to state changes is the same as in `FutureCubit`
+
+```dart
+class NewMessageWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.watch<NewMessageCubit>();
+    final state = cubit.state;
+
+    return state.when(
+      loading: LoadingWidget.new,
+      error: (error, stackTrace) => ErrorWidget(error),
+      data: (data) => LoadedMessage(data),
+    );
+  }
+}
+```
+
+# See more
+
+As you can see, the `FutureCubit` or `StreamCubit` significantly 
+reduces the amount of code used to handle states of async data.
+
+Go check the package on [pub.dev](https://pub.dev/packages/async_cubits) and [GitHub](https://github.com/jarekb123/async_cubits).
+
+In the next article I'll describe the usage of `MutationCubit` which is also a part of `async_cubits` package.
