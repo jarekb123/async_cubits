@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:infinit_flutter/di/di.dart';
-import 'package:infinit_flutter/features/breweries_list/breweries_list_page.dart';
 import 'package:infinit_flutter/features/home/home_page.dart';
 
 void main() {
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }

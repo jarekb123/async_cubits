@@ -29,8 +29,10 @@ class _BreweriesCount extends StatelessWidget {
         '$count',
         style: const TextStyle(fontSize: 24),
       );
-    } else {
+    } else if (state.isLoading) {
       return const Text('...');
+    } else {
+      return const Text('Error');
     }
   }
 }

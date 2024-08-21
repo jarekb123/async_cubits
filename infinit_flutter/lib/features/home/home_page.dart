@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:infinit_flutter/features/breweries_list/breweries_list_page.dart';
 import 'package:infinit_flutter/features/dashboard/dashboard_page.dart';
 
