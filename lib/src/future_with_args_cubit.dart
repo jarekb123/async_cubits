@@ -1,0 +1,46 @@
+import 'package:async_cubits/async_cubits.dart';
+import 'package:async_cubits/src/future_cubit_performer.dart';
+import 'package:meta/meta.dart';
+
+export 'async_value.dart' show AsyncValue;
+
+/// {@template future_cubit_with_args}
+/// [FutureWithArgsCubit] loads data from [future] and emits it in safe way.
+/// The result of [future] is wrapped in [AsyncValue].
+/// {@endtemplate}
+abstract class FutureWithArgsCubit<Args, T> extends AsyncCubit<T>
+    with FutureCubitPerformerMixin<T> {
+  /// Creates [FutureWithArgsCubit].
+  /// If `initialState` is not provided, [AsyncValue.loading]
+  /// as initial state will be used.
+  ///
+  /// {@macro future_cubit_with_args}
+  FutureWithArgsCubit([super.initialState]);
+
+  /// Performs the actual async operation.
+  /// It is used by [load] and [refresh] internally.
+  @protected
+  Future<T> future(Args args);
+
+  /// Loads data from [future] and emits it.
+  /// If you call [load] when [FutureWithArgsCubit] has already loaded data,
+  /// it will clear previously loaded data.
+  ///
+  /// If [future] returns a value, it will be emitted as [AsyncValue.data].
+  /// If [future] throws an error, it will be emitted as [AsyncValue.error].
+  Future<void> load(Args args) {
+    return performLoad(() => future(args));
+  }
+
+  /// Refreshes data using [future] and merges loading/error state with previous state.
+  ///
+  /// If previous state was:
+  /// * [AsyncValue.data] -> new will have [AsyncValue.isLoading] set to true
+  /// and value from previous state.
+  /// * [AsyncValue.error] -> new will have [AsyncValue.isLoading] set to true
+  /// and error/stackTrace from previous state.
+  /// * [AsyncValue.loading] -> new will be [AsyncLoading].
+  Future<void> refresh(Args args) async {
+    return performRefresh(() => future(args));
+  }
+}
