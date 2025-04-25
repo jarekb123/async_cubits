@@ -35,9 +35,9 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
   void onChange(Change<MutationState<O>> change) {
     super.onChange(change);
     final nextState = change.nextState;
-    if (nextState is _Success<O>) {
+    if (nextState is Success<O>) {
       onSuccess(nextState.result);
-    } else if (nextState is _Failure<O>) {
+    } else if (nextState is Failure<O>) {
       AsyncCubitsLogger.error(
         debugKey,
         'Mutation failed',
@@ -65,7 +65,7 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
     }
 
     final state = this.state;
-    if (state is _Failure && !canRetry) {
+    if (state is Failure && !canRetry) {
       AsyncCubitsLogger.info(
         debugKey,
         'Mutation failed and cannot be retried. Ignoring invoke.',
@@ -90,38 +90,42 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
 
 /// The state of the [MutationCubit].
 @freezed
-class MutationState<T> with _$MutationState<T> {
+sealed class MutationState<T> with _$MutationState<T> {
   /// The cubit is in the `idle` state, which means
   /// that mutation has not been invoked yet.
-  const factory MutationState.idle() = _Idle<T>;
+  const factory MutationState.idle() = Idle<T>;
 
   /// {@template mutation_state_loading}
   /// The cubit is in the `loading` state, which means
   /// that the mutation is invoked and is currently in progress.
   /// {@endtemplate}
-  const factory MutationState.loading() = _Loading<T>;
+  const factory MutationState.loading() = Loading<T>;
 
   /// {@template mutation_state_success}
   /// The cubit is in the `success` state, which means
   /// that the mutation was successful.
   /// {@endtemplate}
-  const factory MutationState.success(T result) = _Success<T>;
+  const factory MutationState.success(
+    T result,
+  ) = Success<T>;
 
   /// {@template mutation_state_failure}
   /// The cubit is in the `failure` state, which means
   /// that the mutation failed.
   /// {@endtemplate}
-  const factory MutationState.failure(Object error, StackTrace stackTrace) =
-      _Failure<T>;
+  const factory MutationState.failure(
+    Object error,
+    StackTrace stackTrace,
+  ) = Failure<T>;
 
   const MutationState._();
 
   /// {@macro mutation_state_loading}
-  bool get isLoading => this is _Loading<T>;
+  bool get isLoading => this is Loading<T>;
 
   /// {@macro mutation_state_success}
-  bool get isSuccess => this is _Success<T>;
+  bool get isSuccess => this is Success<T>;
 
   /// {@macro mutation_state_failure}
-  bool get isFailure => this is _Failure<T>;
+  bool get isFailure => this is Failure<T>;
 }
