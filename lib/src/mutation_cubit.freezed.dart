@@ -43,8 +43,8 @@ class $MutationStateCopyWith<T, $Res> {
 
 /// @nodoc
 
-class _Idle<T> extends MutationState<T> with DiagnosticableTreeMixin {
-  const _Idle() : super._();
+class Idle<T> extends MutationState<T> with DiagnosticableTreeMixin {
+  const Idle() : super._();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -54,7 +54,7 @@ class _Idle<T> extends MutationState<T> with DiagnosticableTreeMixin {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Idle<T>);
+        (other.runtimeType == runtimeType && other is Idle<T>);
   }
 
   @override
@@ -68,8 +68,8 @@ class _Idle<T> extends MutationState<T> with DiagnosticableTreeMixin {
 
 /// @nodoc
 
-class _Loading<T> extends MutationState<T> with DiagnosticableTreeMixin {
-  const _Loading() : super._();
+class Loading<T> extends MutationState<T> with DiagnosticableTreeMixin {
+  const Loading() : super._();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -79,7 +79,7 @@ class _Loading<T> extends MutationState<T> with DiagnosticableTreeMixin {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading<T>);
+        (other.runtimeType == runtimeType && other is Loading<T>);
   }
 
   @override
@@ -93,8 +93,8 @@ class _Loading<T> extends MutationState<T> with DiagnosticableTreeMixin {
 
 /// @nodoc
 
-class _Success<T> extends MutationState<T> with DiagnosticableTreeMixin {
-  const _Success(this.result) : super._();
+class Success<T> extends MutationState<T> with DiagnosticableTreeMixin {
+  const Success(this.result) : super._();
 
   final T result;
 
@@ -102,8 +102,8 @@ class _Success<T> extends MutationState<T> with DiagnosticableTreeMixin {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SuccessCopyWith<T, _Success<T>> get copyWith =>
-      __$SuccessCopyWithImpl<T, _Success<T>>(this, _$identity);
+  $SuccessCopyWith<T, Success<T>> get copyWith =>
+      _$SuccessCopyWithImpl<T, Success<T>>(this, _$identity);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -116,7 +116,7 @@ class _Success<T> extends MutationState<T> with DiagnosticableTreeMixin {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success<T> &&
+            other is Success<T> &&
             const DeepCollectionEquality().equals(other.result, result));
   }
 
@@ -131,21 +131,20 @@ class _Success<T> extends MutationState<T> with DiagnosticableTreeMixin {
 }
 
 /// @nodoc
-abstract mixin class _$SuccessCopyWith<T, $Res>
+abstract mixin class $SuccessCopyWith<T, $Res>
     implements $MutationStateCopyWith<T, $Res> {
-  factory _$SuccessCopyWith(
-          _Success<T> value, $Res Function(_Success<T>) _then) =
-      __$SuccessCopyWithImpl;
+  factory $SuccessCopyWith(Success<T> value, $Res Function(Success<T>) _then) =
+      _$SuccessCopyWithImpl;
   @useResult
   $Res call({T result});
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<T, $Res> implements _$SuccessCopyWith<T, $Res> {
-  __$SuccessCopyWithImpl(this._self, this._then);
+class _$SuccessCopyWithImpl<T, $Res> implements $SuccessCopyWith<T, $Res> {
+  _$SuccessCopyWithImpl(this._self, this._then);
 
-  final _Success<T> _self;
-  final $Res Function(_Success<T>) _then;
+  final Success<T> _self;
+  final $Res Function(Success<T>) _then;
 
   /// Create a copy of MutationState
   /// with the given fields replaced by the non-null parameter values.
@@ -153,7 +152,7 @@ class __$SuccessCopyWithImpl<T, $Res> implements _$SuccessCopyWith<T, $Res> {
   $Res call({
     Object? result = freezed,
   }) {
-    return _then(_Success<T>(
+    return _then(Success<T>(
       freezed == result
           ? _self.result
           : result // ignore: cast_nullable_to_non_nullable
@@ -164,8 +163,8 @@ class __$SuccessCopyWithImpl<T, $Res> implements _$SuccessCopyWith<T, $Res> {
 
 /// @nodoc
 
-class _Failure<T> extends MutationState<T> with DiagnosticableTreeMixin {
-  const _Failure(this.error, this.stackTrace) : super._();
+class Failure<T> extends MutationState<T> with DiagnosticableTreeMixin {
+  const Failure(this.error, this.stackTrace) : super._();
 
   final Object error;
   final StackTrace stackTrace;
@@ -174,8 +173,8 @@ class _Failure<T> extends MutationState<T> with DiagnosticableTreeMixin {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailureCopyWith<T, _Failure<T>> get copyWith =>
-      __$FailureCopyWithImpl<T, _Failure<T>>(this, _$identity);
+  $FailureCopyWith<T, Failure<T>> get copyWith =>
+      _$FailureCopyWithImpl<T, Failure<T>>(this, _$identity);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -189,7 +188,7 @@ class _Failure<T> extends MutationState<T> with DiagnosticableTreeMixin {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failure<T> &&
+            other is Failure<T> &&
             const DeepCollectionEquality().equals(other.error, error) &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace));
@@ -206,21 +205,20 @@ class _Failure<T> extends MutationState<T> with DiagnosticableTreeMixin {
 }
 
 /// @nodoc
-abstract mixin class _$FailureCopyWith<T, $Res>
+abstract mixin class $FailureCopyWith<T, $Res>
     implements $MutationStateCopyWith<T, $Res> {
-  factory _$FailureCopyWith(
-          _Failure<T> value, $Res Function(_Failure<T>) _then) =
-      __$FailureCopyWithImpl;
+  factory $FailureCopyWith(Failure<T> value, $Res Function(Failure<T>) _then) =
+      _$FailureCopyWithImpl;
   @useResult
   $Res call({Object error, StackTrace stackTrace});
 }
 
 /// @nodoc
-class __$FailureCopyWithImpl<T, $Res> implements _$FailureCopyWith<T, $Res> {
-  __$FailureCopyWithImpl(this._self, this._then);
+class _$FailureCopyWithImpl<T, $Res> implements $FailureCopyWith<T, $Res> {
+  _$FailureCopyWithImpl(this._self, this._then);
 
-  final _Failure<T> _self;
-  final $Res Function(_Failure<T>) _then;
+  final Failure<T> _self;
+  final $Res Function(Failure<T>) _then;
 
   /// Create a copy of MutationState
   /// with the given fields replaced by the non-null parameter values.
@@ -229,7 +227,7 @@ class __$FailureCopyWithImpl<T, $Res> implements _$FailureCopyWith<T, $Res> {
     Object? error = null,
     Object? stackTrace = null,
   }) {
-    return _then(_Failure<T>(
+    return _then(Failure<T>(
       null == error ? _self.error : error,
       null == stackTrace
           ? _self.stackTrace

@@ -87,7 +87,7 @@ abstract class AsyncValue<T> {
 /// has succeeded with a value
 /// {@endtemplate}
 @freezed
-sealed class AsyncData<T> with _$AsyncData<T> implements AsyncValue<T> {
+abstract class AsyncData<T> with _$AsyncData<T> implements AsyncValue<T> {
   /// {@macro async_data}
   const factory AsyncData(
     T value, {
@@ -128,7 +128,7 @@ sealed class AsyncData<T> with _$AsyncData<T> implements AsyncValue<T> {
 /// A state representing that asynchronous computation has failed with an error
 /// {@endtemplate}
 @freezed
-sealed class AsyncError<T> with _$AsyncError<T> implements AsyncValue<T> {
+abstract class AsyncError<T> with _$AsyncError<T> implements AsyncValue<T> {
   /// {@macro async_error}
   const factory AsyncError(
     Object error,
@@ -171,7 +171,7 @@ sealed class AsyncError<T> with _$AsyncError<T> implements AsyncValue<T> {
 /// (e.g. from a network call).
 /// {@endtemplate}
 @freezed
-sealed class AsyncLoading<T> with _$AsyncLoading<T> implements AsyncValue<T> {
+abstract class AsyncLoading<T> with _$AsyncLoading<T> implements AsyncValue<T> {
   /// {@macro async_loading}
   const factory AsyncLoading({
     T? value,
