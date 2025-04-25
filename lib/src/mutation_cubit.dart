@@ -90,7 +90,7 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
 
 /// The state of the [MutationCubit].
 @freezed
-class MutationState<T> with _$MutationState<T> {
+sealed class MutationState<T> with _$MutationState<T> {
   /// The cubit is in the `idle` state, which means
   /// that mutation has not been invoked yet.
   const factory MutationState.idle() = _Idle<T>;

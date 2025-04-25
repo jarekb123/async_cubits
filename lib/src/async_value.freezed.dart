@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,140 +10,29 @@ part of 'async_value.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$AsyncData<T> {
-  T get value => throw _privateConstructorUsedError;
-  bool get isLoading => throw _privateConstructorUsedError;
-  Object? get error => throw _privateConstructorUsedError;
-  StackTrace? get stackTrace => throw _privateConstructorUsedError;
+  T get value;
+  bool get isLoading;
+  Object? get error;
+  StackTrace? get stackTrace;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AsyncData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $AsyncDataCopyWith<T, AsyncData<T>> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AsyncDataCopyWith<T, $Res> {
-  factory $AsyncDataCopyWith(
-          AsyncData<T> value, $Res Function(AsyncData<T>) then) =
-      _$AsyncDataCopyWithImpl<T, $Res, AsyncData<T>>;
-  @useResult
-  $Res call({T value, bool isLoading, Object? error, StackTrace? stackTrace});
-}
-
-/// @nodoc
-class _$AsyncDataCopyWithImpl<T, $Res, $Val extends AsyncData<T>>
-    implements $AsyncDataCopyWith<T, $Res> {
-  _$AsyncDataCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? value = freezed,
-    Object? isLoading = null,
-    Object? error = freezed,
-    Object? stackTrace = freezed,
-  }) {
-    return _then(_value.copyWith(
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as T,
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error ? _value.error : error,
-      stackTrace: freezed == stackTrace
-          ? _value.stackTrace
-          : stackTrace // ignore: cast_nullable_to_non_nullable
-              as StackTrace?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_AsyncDataCopyWith<T, $Res>
-    implements $AsyncDataCopyWith<T, $Res> {
-  factory _$$_AsyncDataCopyWith(
-          _$_AsyncData<T> value, $Res Function(_$_AsyncData<T>) then) =
-      __$$_AsyncDataCopyWithImpl<T, $Res>;
-  @override
-  @useResult
-  $Res call({T value, bool isLoading, Object? error, StackTrace? stackTrace});
-}
-
-/// @nodoc
-class __$$_AsyncDataCopyWithImpl<T, $Res>
-    extends _$AsyncDataCopyWithImpl<T, $Res, _$_AsyncData<T>>
-    implements _$$_AsyncDataCopyWith<T, $Res> {
-  __$$_AsyncDataCopyWithImpl(
-      _$_AsyncData<T> _value, $Res Function(_$_AsyncData<T>) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? value = freezed,
-    Object? isLoading = null,
-    Object? error = freezed,
-    Object? stackTrace = freezed,
-  }) {
-    return _then(_$_AsyncData<T>(
-      freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as T,
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error ? _value.error : error,
-      stackTrace: freezed == stackTrace
-          ? _value.stackTrace
-          : stackTrace // ignore: cast_nullable_to_non_nullable
-              as StackTrace?,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$_AsyncData<T> extends _AsyncData<T> {
-  const _$_AsyncData(this.value,
-      {this.isLoading = false, this.error, this.stackTrace})
-      : super._();
+      _$AsyncDataCopyWithImpl<T, AsyncData<T>>(
+          this as AsyncData<T>, _$identity);
 
   @override
-  final T value;
-  @override
-  @JsonKey()
-  final bool isLoading;
-  @override
-  final Object? error;
-  @override
-  final StackTrace? stackTrace;
-
-  @override
-  String toString() {
-    return 'AsyncData<$T>(value: $value, isLoading: $isLoading, error: $error, stackTrace: $stackTrace)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AsyncData<T> &&
+            other is AsyncData<T> &&
             const DeepCollectionEquality().equals(other.value, value) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
@@ -159,187 +49,176 @@ class _$_AsyncData<T> extends _AsyncData<T> {
       const DeepCollectionEquality().hash(error),
       stackTrace);
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$_AsyncDataCopyWith<T, _$_AsyncData<T>> get copyWith =>
-      __$$_AsyncDataCopyWithImpl<T, _$_AsyncData<T>>(this, _$identity);
-}
-
-abstract class _AsyncData<T> extends AsyncData<T> {
-  const factory _AsyncData(final T value,
-      {final bool isLoading,
-      final Object? error,
-      final StackTrace? stackTrace}) = _$_AsyncData<T>;
-  const _AsyncData._() : super._();
-
-  @override
-  T get value;
-  @override
-  bool get isLoading;
-  @override
-  Object? get error;
-  @override
-  StackTrace? get stackTrace;
-  @override
-  @JsonKey(ignore: true)
-  _$$_AsyncDataCopyWith<T, _$_AsyncData<T>> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$AsyncError<T> {
-  Object get error => throw _privateConstructorUsedError;
-  StackTrace get stackTrace => throw _privateConstructorUsedError;
-  T? get value => throw _privateConstructorUsedError;
-  bool get hasValue => throw _privateConstructorUsedError;
-  bool get isLoading => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $AsyncErrorCopyWith<T, AsyncError<T>> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AsyncErrorCopyWith<T, $Res> {
-  factory $AsyncErrorCopyWith(
-          AsyncError<T> value, $Res Function(AsyncError<T>) then) =
-      _$AsyncErrorCopyWithImpl<T, $Res, AsyncError<T>>;
-  @useResult
-  $Res call(
-      {Object error,
-      StackTrace stackTrace,
-      T? value,
-      bool hasValue,
-      bool isLoading});
-}
-
-/// @nodoc
-class _$AsyncErrorCopyWithImpl<T, $Res, $Val extends AsyncError<T>>
-    implements $AsyncErrorCopyWith<T, $Res> {
-  _$AsyncErrorCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? error = null,
-    Object? stackTrace = null,
-    Object? value = freezed,
-    Object? hasValue = null,
-    Object? isLoading = null,
-  }) {
-    return _then(_value.copyWith(
-      error: null == error ? _value.error : error,
-      stackTrace: null == stackTrace
-          ? _value.stackTrace
-          : stackTrace // ignore: cast_nullable_to_non_nullable
-              as StackTrace,
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as T?,
-      hasValue: null == hasValue
-          ? _value.hasValue
-          : hasValue // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+  String toString() {
+    return 'AsyncData<$T>(value: $value, isLoading: $isLoading, error: $error, stackTrace: $stackTrace)';
   }
 }
 
 /// @nodoc
-abstract class _$$_AsyncErrorCopyWith<T, $Res>
-    implements $AsyncErrorCopyWith<T, $Res> {
-  factory _$$_AsyncErrorCopyWith(
-          _$_AsyncError<T> value, $Res Function(_$_AsyncError<T>) then) =
-      __$$_AsyncErrorCopyWithImpl<T, $Res>;
-  @override
+abstract mixin class $AsyncDataCopyWith<T, $Res> {
+  factory $AsyncDataCopyWith(
+          AsyncData<T> value, $Res Function(AsyncData<T>) _then) =
+      _$AsyncDataCopyWithImpl;
   @useResult
-  $Res call(
-      {Object error,
-      StackTrace stackTrace,
-      T? value,
-      bool hasValue,
-      bool isLoading});
+  $Res call({T value, bool isLoading, Object? error, StackTrace? stackTrace});
 }
 
 /// @nodoc
-class __$$_AsyncErrorCopyWithImpl<T, $Res>
-    extends _$AsyncErrorCopyWithImpl<T, $Res, _$_AsyncError<T>>
-    implements _$$_AsyncErrorCopyWith<T, $Res> {
-  __$$_AsyncErrorCopyWithImpl(
-      _$_AsyncError<T> _value, $Res Function(_$_AsyncError<T>) _then)
-      : super(_value, _then);
+class _$AsyncDataCopyWithImpl<T, $Res> implements $AsyncDataCopyWith<T, $Res> {
+  _$AsyncDataCopyWithImpl(this._self, this._then);
 
+  final AsyncData<T> _self;
+  final $Res Function(AsyncData<T>) _then;
+
+  /// Create a copy of AsyncData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? error = null,
-    Object? stackTrace = null,
     Object? value = freezed,
-    Object? hasValue = null,
     Object? isLoading = null,
+    Object? error = freezed,
+    Object? stackTrace = freezed,
   }) {
-    return _then(_$_AsyncError<T>(
-      null == error ? _value.error : error,
-      null == stackTrace
-          ? _value.stackTrace
-          : stackTrace // ignore: cast_nullable_to_non_nullable
-              as StackTrace,
+    return _then(_self.copyWith(
       value: freezed == value
-          ? _value.value
+          ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
-              as T?,
-      hasValue: null == hasValue
-          ? _value.hasValue
-          : hasValue // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as T,
       isLoading: null == isLoading
-          ? _value.isLoading
+          ? _self.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      error: freezed == error ? _self.error : error,
+      stackTrace: freezed == stackTrace
+          ? _self.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace?,
     ));
   }
 }
 
 /// @nodoc
 
-class _$_AsyncError<T> extends _AsyncError<T> {
-  const _$_AsyncError(this.error, this.stackTrace,
-      {this.value, this.hasValue = false, this.isLoading = false})
+class _AsyncData<T> extends AsyncData<T> {
+  const _AsyncData(this.value,
+      {this.isLoading = false, this.error, this.stackTrace})
       : super._();
 
   @override
-  final Object error;
-  @override
-  final StackTrace stackTrace;
-  @override
-  final T? value;
-  @override
-  @JsonKey()
-  final bool hasValue;
+  final T value;
   @override
   @JsonKey()
   final bool isLoading;
+  @override
+  final Object? error;
+  @override
+  final StackTrace? stackTrace;
+
+  /// Create a copy of AsyncData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AsyncDataCopyWith<T, _AsyncData<T>> get copyWith =>
+      __$AsyncDataCopyWithImpl<T, _AsyncData<T>>(this, _$identity);
 
   @override
-  String toString() {
-    return 'AsyncError<$T>(error: $error, stackTrace: $stackTrace, value: $value, hasValue: $hasValue, isLoading: $isLoading)';
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _AsyncData<T> &&
+            const DeepCollectionEquality().equals(other.value, value) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading) &&
+            const DeepCollectionEquality().equals(other.error, error) &&
+            (identical(other.stackTrace, stackTrace) ||
+                other.stackTrace == stackTrace));
   }
 
   @override
-  bool operator ==(dynamic other) {
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(value),
+      isLoading,
+      const DeepCollectionEquality().hash(error),
+      stackTrace);
+
+  @override
+  String toString() {
+    return 'AsyncData<$T>(value: $value, isLoading: $isLoading, error: $error, stackTrace: $stackTrace)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$AsyncDataCopyWith<T, $Res>
+    implements $AsyncDataCopyWith<T, $Res> {
+  factory _$AsyncDataCopyWith(
+          _AsyncData<T> value, $Res Function(_AsyncData<T>) _then) =
+      __$AsyncDataCopyWithImpl;
+  @override
+  @useResult
+  $Res call({T value, bool isLoading, Object? error, StackTrace? stackTrace});
+}
+
+/// @nodoc
+class __$AsyncDataCopyWithImpl<T, $Res>
+    implements _$AsyncDataCopyWith<T, $Res> {
+  __$AsyncDataCopyWithImpl(this._self, this._then);
+
+  final _AsyncData<T> _self;
+  final $Res Function(_AsyncData<T>) _then;
+
+  /// Create a copy of AsyncData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? value = freezed,
+    Object? isLoading = null,
+    Object? error = freezed,
+    Object? stackTrace = freezed,
+  }) {
+    return _then(_AsyncData<T>(
+      freezed == value
+          ? _self.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as T,
+      isLoading: null == isLoading
+          ? _self.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      error: freezed == error ? _self.error : error,
+      stackTrace: freezed == stackTrace
+          ? _self.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace?,
+    ));
+  }
+}
+
+/// @nodoc
+mixin _$AsyncError<T> {
+  Object get error;
+  StackTrace get stackTrace;
+  T? get value;
+  bool get hasValue;
+  bool get isLoading;
+
+  /// Create a copy of AsyncError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $AsyncErrorCopyWith<T, AsyncError<T>> get copyWith =>
+      _$AsyncErrorCopyWithImpl<T, AsyncError<T>>(
+          this as AsyncError<T>, _$identity);
+
+  @override
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AsyncError<T> &&
+            other is AsyncError<T> &&
             const DeepCollectionEquality().equals(other.error, error) &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
@@ -359,117 +238,62 @@ class _$_AsyncError<T> extends _AsyncError<T> {
       hasValue,
       isLoading);
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$_AsyncErrorCopyWith<T, _$_AsyncError<T>> get copyWith =>
-      __$$_AsyncErrorCopyWithImpl<T, _$_AsyncError<T>>(this, _$identity);
-}
-
-abstract class _AsyncError<T> extends AsyncError<T> {
-  const factory _AsyncError(final Object error, final StackTrace stackTrace,
-      {final T? value,
-      final bool hasValue,
-      final bool isLoading}) = _$_AsyncError<T>;
-  const _AsyncError._() : super._();
-
-  @override
-  Object get error;
-  @override
-  StackTrace get stackTrace;
-  @override
-  T? get value;
-  @override
-  bool get hasValue;
-  @override
-  bool get isLoading;
-  @override
-  @JsonKey(ignore: true)
-  _$$_AsyncErrorCopyWith<T, _$_AsyncError<T>> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$AsyncLoading<T> {
-  T? get value => throw _privateConstructorUsedError;
-  bool get hasValue => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $AsyncLoadingCopyWith<T, AsyncLoading<T>> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AsyncLoadingCopyWith<T, $Res> {
-  factory $AsyncLoadingCopyWith(
-          AsyncLoading<T> value, $Res Function(AsyncLoading<T>) then) =
-      _$AsyncLoadingCopyWithImpl<T, $Res, AsyncLoading<T>>;
-  @useResult
-  $Res call({T? value, bool hasValue});
-}
-
-/// @nodoc
-class _$AsyncLoadingCopyWithImpl<T, $Res, $Val extends AsyncLoading<T>>
-    implements $AsyncLoadingCopyWith<T, $Res> {
-  _$AsyncLoadingCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? value = freezed,
-    Object? hasValue = null,
-  }) {
-    return _then(_value.copyWith(
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as T?,
-      hasValue: null == hasValue
-          ? _value.hasValue
-          : hasValue // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+  String toString() {
+    return 'AsyncError<$T>(error: $error, stackTrace: $stackTrace, value: $value, hasValue: $hasValue, isLoading: $isLoading)';
   }
 }
 
 /// @nodoc
-abstract class _$$_AsyncLoadingCopyWith<T, $Res>
-    implements $AsyncLoadingCopyWith<T, $Res> {
-  factory _$$_AsyncLoadingCopyWith(
-          _$_AsyncLoading<T> value, $Res Function(_$_AsyncLoading<T>) then) =
-      __$$_AsyncLoadingCopyWithImpl<T, $Res>;
-  @override
+abstract mixin class $AsyncErrorCopyWith<T, $Res> {
+  factory $AsyncErrorCopyWith(
+          AsyncError<T> value, $Res Function(AsyncError<T>) _then) =
+      _$AsyncErrorCopyWithImpl;
   @useResult
-  $Res call({T? value, bool hasValue});
+  $Res call(
+      {Object error,
+      StackTrace stackTrace,
+      T? value,
+      bool hasValue,
+      bool isLoading});
 }
 
 /// @nodoc
-class __$$_AsyncLoadingCopyWithImpl<T, $Res>
-    extends _$AsyncLoadingCopyWithImpl<T, $Res, _$_AsyncLoading<T>>
-    implements _$$_AsyncLoadingCopyWith<T, $Res> {
-  __$$_AsyncLoadingCopyWithImpl(
-      _$_AsyncLoading<T> _value, $Res Function(_$_AsyncLoading<T>) _then)
-      : super(_value, _then);
+class _$AsyncErrorCopyWithImpl<T, $Res>
+    implements $AsyncErrorCopyWith<T, $Res> {
+  _$AsyncErrorCopyWithImpl(this._self, this._then);
 
+  final AsyncError<T> _self;
+  final $Res Function(AsyncError<T>) _then;
+
+  /// Create a copy of AsyncError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? error = null,
+    Object? stackTrace = null,
     Object? value = freezed,
     Object? hasValue = null,
+    Object? isLoading = null,
   }) {
-    return _then(_$_AsyncLoading<T>(
+    return _then(_self.copyWith(
+      error: null == error ? _self.error : error,
+      stackTrace: null == stackTrace
+          ? _self.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
       value: freezed == value
-          ? _value.value
+          ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
               as T?,
       hasValue: null == hasValue
-          ? _value.hasValue
+          ? _self.hasValue
           : hasValue // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoading: null == isLoading
+          ? _self.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -477,25 +301,137 @@ class __$$_AsyncLoadingCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$_AsyncLoading<T> extends _AsyncLoading<T> {
-  const _$_AsyncLoading({this.value, this.hasValue = false}) : super._();
+class _AsyncError<T> extends AsyncError<T> {
+  const _AsyncError(this.error, this.stackTrace,
+      {this.value, this.hasValue = false, this.isLoading = false})
+      : super._();
 
+  @override
+  final Object error;
+  @override
+  final StackTrace stackTrace;
   @override
   final T? value;
   @override
   @JsonKey()
   final bool hasValue;
+  @override
+  @JsonKey()
+  final bool isLoading;
+
+  /// Create a copy of AsyncError
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AsyncErrorCopyWith<T, _AsyncError<T>> get copyWith =>
+      __$AsyncErrorCopyWithImpl<T, _AsyncError<T>>(this, _$identity);
 
   @override
-  String toString() {
-    return 'AsyncLoading<$T>(value: $value, hasValue: $hasValue)';
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _AsyncError<T> &&
+            const DeepCollectionEquality().equals(other.error, error) &&
+            (identical(other.stackTrace, stackTrace) ||
+                other.stackTrace == stackTrace) &&
+            const DeepCollectionEquality().equals(other.value, value) &&
+            (identical(other.hasValue, hasValue) ||
+                other.hasValue == hasValue) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading));
   }
 
   @override
-  bool operator ==(dynamic other) {
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(error),
+      stackTrace,
+      const DeepCollectionEquality().hash(value),
+      hasValue,
+      isLoading);
+
+  @override
+  String toString() {
+    return 'AsyncError<$T>(error: $error, stackTrace: $stackTrace, value: $value, hasValue: $hasValue, isLoading: $isLoading)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$AsyncErrorCopyWith<T, $Res>
+    implements $AsyncErrorCopyWith<T, $Res> {
+  factory _$AsyncErrorCopyWith(
+          _AsyncError<T> value, $Res Function(_AsyncError<T>) _then) =
+      __$AsyncErrorCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {Object error,
+      StackTrace stackTrace,
+      T? value,
+      bool hasValue,
+      bool isLoading});
+}
+
+/// @nodoc
+class __$AsyncErrorCopyWithImpl<T, $Res>
+    implements _$AsyncErrorCopyWith<T, $Res> {
+  __$AsyncErrorCopyWithImpl(this._self, this._then);
+
+  final _AsyncError<T> _self;
+  final $Res Function(_AsyncError<T>) _then;
+
+  /// Create a copy of AsyncError
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? error = null,
+    Object? stackTrace = null,
+    Object? value = freezed,
+    Object? hasValue = null,
+    Object? isLoading = null,
+  }) {
+    return _then(_AsyncError<T>(
+      null == error ? _self.error : error,
+      null == stackTrace
+          ? _self.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
+      value: freezed == value
+          ? _self.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as T?,
+      hasValue: null == hasValue
+          ? _self.hasValue
+          : hasValue // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoading: null == isLoading
+          ? _self.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+mixin _$AsyncLoading<T> {
+  T? get value;
+  bool get hasValue;
+
+  /// Create a copy of AsyncLoading
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $AsyncLoadingCopyWith<T, AsyncLoading<T>> get copyWith =>
+      _$AsyncLoadingCopyWithImpl<T, AsyncLoading<T>>(
+          this as AsyncLoading<T>, _$identity);
+
+  @override
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AsyncLoading<T> &&
+            other is AsyncLoading<T> &&
             const DeepCollectionEquality().equals(other.value, value) &&
             (identical(other.hasValue, hasValue) ||
                 other.hasValue == hasValue));
@@ -505,24 +441,127 @@ class _$_AsyncLoading<T> extends _AsyncLoading<T> {
   int get hashCode => Object.hash(
       runtimeType, const DeepCollectionEquality().hash(value), hasValue);
 
-  @JsonKey(ignore: true)
+  @override
+  String toString() {
+    return 'AsyncLoading<$T>(value: $value, hasValue: $hasValue)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $AsyncLoadingCopyWith<T, $Res> {
+  factory $AsyncLoadingCopyWith(
+          AsyncLoading<T> value, $Res Function(AsyncLoading<T>) _then) =
+      _$AsyncLoadingCopyWithImpl;
+  @useResult
+  $Res call({T? value, bool hasValue});
+}
+
+/// @nodoc
+class _$AsyncLoadingCopyWithImpl<T, $Res>
+    implements $AsyncLoadingCopyWith<T, $Res> {
+  _$AsyncLoadingCopyWithImpl(this._self, this._then);
+
+  final AsyncLoading<T> _self;
+  final $Res Function(AsyncLoading<T>) _then;
+
+  /// Create a copy of AsyncLoading
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? value = freezed,
+    Object? hasValue = null,
+  }) {
+    return _then(_self.copyWith(
+      value: freezed == value
+          ? _self.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as T?,
+      hasValue: null == hasValue
+          ? _self.hasValue
+          : hasValue // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _AsyncLoading<T> extends AsyncLoading<T> {
+  const _AsyncLoading({this.value, this.hasValue = false}) : super._();
+
+  @override
+  final T? value;
+  @override
+  @JsonKey()
+  final bool hasValue;
+
+  /// Create a copy of AsyncLoading
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AsyncLoadingCopyWith<T, _AsyncLoading<T>> get copyWith =>
+      __$AsyncLoadingCopyWithImpl<T, _AsyncLoading<T>>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _AsyncLoading<T> &&
+            const DeepCollectionEquality().equals(other.value, value) &&
+            (identical(other.hasValue, hasValue) ||
+                other.hasValue == hasValue));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(value), hasValue);
+
+  @override
+  String toString() {
+    return 'AsyncLoading<$T>(value: $value, hasValue: $hasValue)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$AsyncLoadingCopyWith<T, $Res>
+    implements $AsyncLoadingCopyWith<T, $Res> {
+  factory _$AsyncLoadingCopyWith(
+          _AsyncLoading<T> value, $Res Function(_AsyncLoading<T>) _then) =
+      __$AsyncLoadingCopyWithImpl;
+  @override
+  @useResult
+  $Res call({T? value, bool hasValue});
+}
+
+/// @nodoc
+class __$AsyncLoadingCopyWithImpl<T, $Res>
+    implements _$AsyncLoadingCopyWith<T, $Res> {
+  __$AsyncLoadingCopyWithImpl(this._self, this._then);
+
+  final _AsyncLoading<T> _self;
+  final $Res Function(_AsyncLoading<T>) _then;
+
+  /// Create a copy of AsyncLoading
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  _$$_AsyncLoadingCopyWith<T, _$_AsyncLoading<T>> get copyWith =>
-      __$$_AsyncLoadingCopyWithImpl<T, _$_AsyncLoading<T>>(this, _$identity);
+  $Res call({
+    Object? value = freezed,
+    Object? hasValue = null,
+  }) {
+    return _then(_AsyncLoading<T>(
+      value: freezed == value
+          ? _self.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as T?,
+      hasValue: null == hasValue
+          ? _self.hasValue
+          : hasValue // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
 
-abstract class _AsyncLoading<T> extends AsyncLoading<T> {
-  const factory _AsyncLoading({final T? value, final bool hasValue}) =
-      _$_AsyncLoading<T>;
-  const _AsyncLoading._() : super._();
-
-  @override
-  T? get value;
-  @override
-  bool get hasValue;
-  @override
-  @JsonKey(ignore: true)
-  _$$_AsyncLoadingCopyWith<T, _$_AsyncLoading<T>> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on
