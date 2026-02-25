@@ -1,4 +1,5 @@
 import 'package:async_cubits/async_cubits.dart';
+import 'package:async_cubits/src/async_cubit_container.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +23,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// {@endtemplate}
 abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
   /// {@macro mutation_cubit}
-  MutationCubit() : super(const MutationIdle());
+  ///
+  /// [container] and [invalidates] work together: when the mutation succeeds,
+  /// every cubit type listed in [invalidates] is looked up in [container] and
+  /// invalidated (reset to loading).
+  MutationCubit({
+    AsyncCubitContainer? container,
+  })  : _container = container,
+        super(const MutationIdle());
+
+  final AsyncCubitContainer? _container;
 
   /// Debug key for this cubit. Used for logging purposes.
   @protected
@@ -85,6 +95,12 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
   /// Called when the mutation is successful.
   void onSuccess(O result) {
     AsyncCubitsLogger.info(debugKey, 'Mutation successful');
+  }
+
+  /// Invalidates the registered [FutureCubit] of type [T] in the container.
+  /// Used to refresh data in other cubits after a successful mutation.
+  void invalidate<T extends FutureCubit<dynamic>>() {
+    _container?.invalidate<T>();
   }
 }
 

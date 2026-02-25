@@ -3,6 +3,7 @@
 library async_cubits;
 
 export 'src/async_cubit.dart';
+export 'src/async_cubit_container.dart';
 export 'src/async_cubits_logger.dart';
 export 'src/async_value.dart';
 export 'src/future_cubit.dart';

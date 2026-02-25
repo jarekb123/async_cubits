@@ -15,7 +15,7 @@ import 'package:meta/meta.dart';
 /// {@endtemplate}
 abstract class AsyncCubit<T> extends Cubit<AsyncValue<T>> {
   /// {@macro async_cubit}
-  AsyncCubit([AsyncValue<T>? initialState])
+  AsyncCubit({AsyncValue<T>? initialState})
       : super(initialState ?? AsyncValue<T>.loading());
 
   /// Debug key for this cubit. Used for logging purposes.

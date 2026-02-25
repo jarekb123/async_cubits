@@ -13,7 +13,7 @@ abstract class StreamCubit<T> extends AsyncCubit<T> {
   /// as initial state will be used.
   ///
   /// {@macro stream_cubit}
-  StreamCubit([super.initialState]);
+  StreamCubit({super.initialState});
 
   StreamSubscription<T>? _subscription;
 

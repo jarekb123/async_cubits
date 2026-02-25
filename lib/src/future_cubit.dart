@@ -29,7 +29,20 @@ export 'async_value.dart' show AsyncValue;
 /// {@endtemplate}
 abstract class FutureCubit<T> extends AsyncCubit<T> {
   /// {@macro future_cubit}
-  FutureCubit([super.initialState]);
+  FutureCubit({super.initialState, AsyncCubitContainer? container})
+      : _container = container ?? AsyncCubitContainer.defaultInstance {
+    _container.register(this);
+  }
+
+  final AsyncCubitContainer _container;
+
+  Future<T> Function()? _lastFuture;
+
+  @override
+  Future<void> close() {
+    _container.unregister(this);
+    return super.close();
+  }
 
   /// Loads data from [future] and emits it.
   ///
@@ -38,6 +51,7 @@ abstract class FutureCubit<T> extends AsyncCubit<T> {
   /// Previously loaded data is cleared on each call.
   @protected
   Future<void> performLoad(Future<T> Function() future) async {
+    _lastFuture = future;
     emit(AsyncValue<T>.loading());
     AsyncCubitsLogger.info(debugKey, 'Loading');
     final result = await _load(future);
@@ -51,6 +65,7 @@ abstract class FutureCubit<T> extends AsyncCubit<T> {
   /// previous state so that the previous value remains available during reload.
   @protected
   Future<void> performRefresh(Future<T> Function() future) async {
+    _lastFuture = future;
     emitMergeWithPrevious(AsyncValue<T>.loading());
     AsyncCubitsLogger.info(debugKey, 'Refreshing');
     final result = await _load(future);
@@ -58,6 +73,20 @@ abstract class FutureCubit<T> extends AsyncCubit<T> {
     if (result is _AsyncData<T>) {
       onData(data: result.data, refresh: true);
     }
+  }
+
+  /// Invalidates the cubit by re-running the last future as a refresh.
+  ///
+  /// If no future has been run yet, do nothing
+  Future<void> invalidate({bool reload = false}) {
+    if (_lastFuture case final last?) {
+      if (reload) {
+        return performLoad(last);
+      } else {
+        return performRefresh(last);
+      }
+    }
+    return Future.value();
   }
 
   /// Called when the async operation returns a value.
