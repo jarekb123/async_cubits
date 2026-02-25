@@ -13,7 +13,6 @@ pubspec.lock
 .uuid
 
 pubspec.lock
-
 # iOS and macOS dependencies
 .build/
 Podfile.lock

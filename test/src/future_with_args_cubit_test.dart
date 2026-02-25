@@ -12,15 +12,15 @@ abstract class _Caller {
 
 class _MockCaller extends Mock implements _Caller {}
 
-class _TestFutureWithArgsCubit extends FutureWithArgsCubit<String, String> {
-  _TestFutureWithArgsCubit({
-    required this.caller,
-  });
+class _TestFutureWithArgsCubit extends FutureCubit<String> {
+  _TestFutureWithArgsCubit({required this.caller});
 
   final _Caller caller;
 
-  @override
-  Future<String> future(String args) => caller.call(args);
+  Future<void> load(String args) => performLoad(() => caller.call(args));
+
+  Future<void> refresh(String args) =>
+      performRefresh(() => caller.call(args));
 }
 
 void main() {

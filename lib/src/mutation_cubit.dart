@@ -1,9 +1,6 @@
 import 'package:async_cubits/async_cubits.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'mutation_cubit.freezed.dart';
 
 /// {@template mutation_cubit}
 /// A cubit that handles a asynchronous mutation.
@@ -25,7 +22,7 @@ part 'mutation_cubit.freezed.dart';
 /// {@endtemplate}
 abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
   /// {@macro mutation_cubit}
-  MutationCubit() : super(const MutationState.idle());
+  MutationCubit() : super(const MutationIdle());
 
   /// Debug key for this cubit. Used for logging purposes.
   @protected
@@ -35,9 +32,9 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
   void onChange(Change<MutationState<O>> change) {
     super.onChange(change);
     final nextState = change.nextState;
-    if (nextState is _Success<O>) {
+    if (nextState is MutationSuccess<O>) {
       onSuccess(nextState.result);
-    } else if (nextState is _Failure<O>) {
+    } else if (nextState is MutationFailure<O>) {
       AsyncCubitsLogger.error(
         debugKey,
         'Mutation failed',
@@ -61,11 +58,14 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
     if (kReleaseMode) {
       AsyncCubitsLogger.info(debugKey, 'Invoking mutation');
     } else {
-      AsyncCubitsLogger.info(debugKey, 'Invoking mutation with input: $input');
+      AsyncCubitsLogger.info(
+        debugKey,
+        'Invoking mutation with input: $input',
+      );
     }
 
     final state = this.state;
-    if (state is _Failure && !canRetry) {
+    if (state is MutationFailure && !canRetry) {
       AsyncCubitsLogger.info(
         debugKey,
         'Mutation failed and cannot be retried. Ignoring invoke.',
@@ -89,39 +89,122 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
 }
 
 /// The state of the [MutationCubit].
-@freezed
-class MutationState<T> with _$MutationState<T> {
+sealed class MutationState<T> {
+  const MutationState();
+
   /// The cubit is in the `idle` state, which means
   /// that mutation has not been invoked yet.
-  const factory MutationState.idle() = _Idle<T>;
+  const factory MutationState.idle() = MutationIdle<T>;
 
   /// {@template mutation_state_loading}
   /// The cubit is in the `loading` state, which means
   /// that the mutation is invoked and is currently in progress.
   /// {@endtemplate}
-  const factory MutationState.loading() = _Loading<T>;
+  const factory MutationState.loading() = MutationLoading<T>;
 
   /// {@template mutation_state_success}
   /// The cubit is in the `success` state, which means
   /// that the mutation was successful.
   /// {@endtemplate}
-  const factory MutationState.success(T result) = _Success<T>;
+  const factory MutationState.success(T result) = MutationSuccess<T>;
 
   /// {@template mutation_state_failure}
   /// The cubit is in the `failure` state, which means
   /// that the mutation failed.
   /// {@endtemplate}
-  const factory MutationState.failure(Object error, StackTrace stackTrace) =
-      _Failure<T>;
-
-  const MutationState._();
+  const factory MutationState.failure(
+    Object error,
+    StackTrace stackTrace,
+  ) = MutationFailure<T>;
 
   /// {@macro mutation_state_loading}
-  bool get isLoading => this is _Loading<T>;
+  bool get isLoading => this is MutationLoading<T>;
 
   /// {@macro mutation_state_success}
-  bool get isSuccess => this is _Success<T>;
+  bool get isSuccess => this is MutationSuccess<T>;
 
   /// {@macro mutation_state_failure}
-  bool get isFailure => this is _Failure<T>;
+  bool get isFailure => this is MutationFailure<T>;
+}
+
+/// The cubit is in the `idle` state.
+@immutable
+final class MutationIdle<T> extends MutationState<T> {
+  /// Creates a [MutationIdle] state.
+  const MutationIdle();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is MutationIdle<T>;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() => 'MutationState<$T>.idle()';
+}
+
+/// The cubit is in the `loading` state.
+@immutable
+final class MutationLoading<T> extends MutationState<T> {
+  /// Creates a [MutationLoading] state.
+  const MutationLoading();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is MutationLoading<T>;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() => 'MutationState<$T>.loading()';
+}
+
+/// The cubit is in the `success` state.
+@immutable
+final class MutationSuccess<T> extends MutationState<T> {
+  /// Creates a [MutationSuccess] state with the given [result].
+  const MutationSuccess(this.result);
+
+  /// The result of the successful mutation.
+  final T result;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MutationSuccess<T> && other.result == result;
+
+  @override
+  int get hashCode => result.hashCode;
+
+  @override
+  String toString() => 'MutationState<$T>.success(result: $result)';
+}
+
+/// The cubit is in the `failure` state.
+@immutable
+final class MutationFailure<T> extends MutationState<T> {
+  /// Creates a [MutationFailure] state with the given [error] and [stackTrace].
+  const MutationFailure(this.error, this.stackTrace);
+
+  /// The error that caused the mutation to fail.
+  final Object error;
+
+  /// The stack trace associated with the [error].
+  final StackTrace stackTrace;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MutationFailure<T> &&
+          other.error == error &&
+          other.stackTrace == stackTrace;
+
+  @override
+  int get hashCode => Object.hash(error, stackTrace);
+
+  @override
+  String toString() =>
+      'MutationState<$T>.failure(error: $error, stackTrace: $stackTrace)';
 }

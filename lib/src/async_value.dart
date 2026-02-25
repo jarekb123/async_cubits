@@ -1,6 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'async_value.freezed.dart';
+import 'package:meta/meta.dart';
 
 /// {@template async_value}
 /// [AsyncValue] represents a state of an asynchronous computation.
@@ -10,7 +8,9 @@ part 'async_value.freezed.dart';
 /// * [AsyncValue.data] - when data is loaded
 /// * [AsyncValue.error] - when error occurred while loading data
 /// {@endtemplate}
-abstract class AsyncValue<T> {
+sealed class AsyncValue<T> {
+  const AsyncValue();
+
   /// {@macro async_data}
   const factory AsyncValue.data(T value) = AsyncData<T>;
 
@@ -23,12 +23,12 @@ abstract class AsyncValue<T> {
   /// {@macro async_loading}
   const factory AsyncValue.loading() = AsyncLoading<T>;
 
-  /// Wheter the value is present
+  /// Whether the value is present
   ///
   /// It can be true even if [isLoading] is true or [hasError] is true
   bool get hasValue;
 
-  /// Wheter the new value is fetching asynchronously
+  /// Whether the new value is fetching asynchronously
   ///
   /// * It can be true even if [hasValue] is true,
   /// e.g. when refreshing (merge [AsyncData] with [AsyncLoading]).
@@ -86,23 +86,30 @@ abstract class AsyncValue<T> {
 /// A state representing that asynchronous computation
 /// has succeeded with a value
 /// {@endtemplate}
-@freezed
-class AsyncData<T> with _$AsyncData<T> implements AsyncValue<T> {
+@immutable
+final class AsyncData<T> extends AsyncValue<T> {
   /// {@macro async_data}
-  const factory AsyncData(
-    T value, {
-    @Default(false) bool isLoading,
-    Object? error,
-    StackTrace? stackTrace,
-  }) = _AsyncData<T>;
+  const AsyncData(
+    this.value, {
+    this.isLoading = false,
+    this.error,
+    this.stackTrace,
+  });
 
-  const AsyncData._();
+  @override
+  final T value;
+
+  @override
+  final bool isLoading;
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
 
   @override
   bool get hasValue => true;
-
-  @override
-  bool get isLoading => false;
 
   @override
   AsyncValue<T> mergeWithPrevious(AsyncValue<T> previous) => this;
@@ -122,23 +129,55 @@ class AsyncData<T> with _$AsyncData<T> implements AsyncValue<T> {
     R? Function(AsyncLoading<T> loading)? loading,
   }) =>
       data?.call(this);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AsyncData<T> &&
+          other.value == value &&
+          other.isLoading == isLoading &&
+          other.error == error &&
+          other.stackTrace == stackTrace;
+
+  @override
+  int get hashCode => Object.hash(value, isLoading, error, stackTrace);
+
+  @override
+  String toString() => 'AsyncData<$T>('
+      'value: $value, '
+      'isLoading: $isLoading, '
+      'error: $error, '
+      'stackTrace: $stackTrace)';
 }
 
 /// {@template async_error}
 /// A state representing that asynchronous computation has failed with an error
 /// {@endtemplate}
-@freezed
-class AsyncError<T> with _$AsyncError<T> implements AsyncValue<T> {
+@immutable
+final class AsyncError<T> extends AsyncValue<T> {
   /// {@macro async_error}
-  const factory AsyncError(
-    Object error,
-    StackTrace stackTrace, {
-    T? value,
-    @Default(false) bool hasValue,
-    @Default(false) bool isLoading,
-  }) = _AsyncError<T>;
+  const AsyncError(
+    this.error,
+    this.stackTrace, {
+    this.value,
+    this.hasValue = false,
+    this.isLoading = false,
+  });
 
-  const AsyncError._();
+  @override
+  final Object error;
+
+  @override
+  final StackTrace stackTrace;
+
+  @override
+  final T? value;
+
+  @override
+  final bool hasValue;
+
+  @override
+  final bool isLoading;
 
   @override
   AsyncValue<T> mergeWithPrevious(AsyncValue<T> previous) => AsyncError(
@@ -164,21 +203,47 @@ class AsyncError<T> with _$AsyncError<T> implements AsyncValue<T> {
     R? Function(AsyncLoading<T> loading)? loading,
   }) =>
       error?.call(this);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AsyncError<T> &&
+          other.error == error &&
+          other.stackTrace == stackTrace &&
+          other.value == value &&
+          other.hasValue == hasValue &&
+          other.isLoading == isLoading;
+
+  @override
+  int get hashCode =>
+      Object.hash(error, stackTrace, value, hasValue, isLoading);
+
+  @override
+  String toString() => 'AsyncError<$T>('
+      'error: $error, '
+      'stackTrace: $stackTrace, '
+      'value: $value, '
+      'hasValue: $hasValue, '
+      'isLoading: $isLoading)';
 }
 
 /// {@template async_loading}
 /// A state representing that the value is being fetched asynchronously
 /// (e.g. from a network call).
 /// {@endtemplate}
-@freezed
-class AsyncLoading<T> with _$AsyncLoading<T> implements AsyncValue<T> {
+@immutable
+final class AsyncLoading<T> extends AsyncValue<T> {
   /// {@macro async_loading}
-  const factory AsyncLoading({
-    T? value,
-    @Default(false) bool hasValue,
-  }) = _AsyncLoading<T>;
+  const AsyncLoading({
+    this.value,
+    this.hasValue = false,
+  });
 
-  const AsyncLoading._();
+  @override
+  final T? value;
+
+  @override
+  final bool hasValue;
 
   @override
   bool get isLoading => true;
@@ -190,10 +255,7 @@ class AsyncLoading<T> with _$AsyncLoading<T> implements AsyncValue<T> {
   StackTrace? get stackTrace => null;
 
   @override
-  AsyncValue<T> mergeWithPrevious(
-    AsyncValue<T> previous, {
-    bool isRefresh = true,
-  }) {
+  AsyncValue<T> mergeWithPrevious(AsyncValue<T> previous) {
     return previous.map(
       data: (d) => AsyncData(
         d.value,
@@ -227,6 +289,19 @@ class AsyncLoading<T> with _$AsyncLoading<T> implements AsyncValue<T> {
     R? Function(AsyncLoading<T> loading)? loading,
   }) =>
       loading?.call(this);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AsyncLoading<T> &&
+          other.value == value &&
+          other.hasValue == hasValue;
+
+  @override
+  int get hashCode => Object.hash(value, hasValue);
+
+  @override
+  String toString() => 'AsyncLoading<$T>(value: $value, hasValue: $hasValue)';
 }
 
 /// Extension on [AsyncValue] providing utility methods
