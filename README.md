@@ -153,6 +153,51 @@ Invoke the mutation with `invoke`:
 context.read<SaveUserCubit>().invoke(user);
 ```
 
+#### Invalidating a FutureCubit after a mutation
+
+Pass the same `AsyncCubitContainer` to both cubits so that after a successful mutation you can call `invalidate<T>()` to refresh the related `FutureCubit`. Both cubits default to `AsyncCubitContainer.defaultInstance`, so for simple apps no extra setup is needed:
+
+```dart
+class GetUserCubit extends FutureCubit<User> {
+  GetUserCubit(this._userRepository);
+
+  final UserRepository _userRepository;
+
+  Future<void> load() => performLoad(_userRepository.getUser);
+  Future<void> refresh() => performRefresh(_userRepository.getUser);
+}
+
+class SaveUserCubit extends MutationCubit<User, void> {
+  SaveUserCubit(this._userRepository);
+
+  final UserRepository _userRepository;
+
+  @override
+  Future<void> mutation(User input) => _userRepository.saveUser(input);
+
+  @override
+  void onSuccess(void result) {
+    super.onSuccess(result);
+    invalidate<GetUserCubit>();
+  }
+}
+```
+
+`invalidate<T>()` invalidates **all** registered cubits of type `T`. Use the optional `filter` parameter to target a specific instance:
+
+```dart
+invalidate<GetUserByIdCubit>(filter: (cubit) => cubit.id == userId);
+```
+
+For feature modules with isolated lifecycles, create a dedicated container and pass it explicitly:
+
+```dart
+final container = AsyncCubitContainer();
+
+BlocProvider(create: (_) => GetUserCubit(_repo, container: container)),
+BlocProvider(create: (_) => SaveUserCubit(_repo, container: container)),
+```
+
 `MutationCubit` emits `MutationState<T>`, a sealed class with four subtypes:
 
 | State | Type | Description |

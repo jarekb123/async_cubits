@@ -8,8 +8,9 @@ import 'package:mocktail/mocktail.dart';
 // ---------------------------------------------------------------------------
 
 class _TestFutureCubit extends FutureCubit<String> {
-  _TestFutureCubit({required super.container});
+  _TestFutureCubit({required super.container, this.tag = ''});
 
+  final String tag;
   int _loadCount = 0;
 
   Future<void> load() => performLoad(
@@ -64,21 +65,17 @@ void main() {
     api = _MockApi();
   });
 
-  test(
-    'AsyncCubit registers itself in the container on creation',
-    () {
-      final cubit = _TestFutureCubit(container: container);
-      expect(container.get<_TestFutureCubit>(), same(cubit));
-    },
-  );
-
   blocTest<_TestFutureCubit, AsyncValue<String>>(
     'AsyncCubit unregisters itself from the container on close',
     build: () => _TestFutureCubit(container: container),
     // blocTest closes the cubit after act; verify runs after close.
     expect: () => isEmpty,
-    verify: (_) {
-      expect(container.get<_TestFutureCubit>(), isNull);
+    verify: (_) async {
+      // After close, invalidate should be a no-op (nothing to invalidate).
+      await expectLater(
+        container.invalidate<_TestFutureCubit>(),
+        completes,
+      );
     },
   );
 
@@ -97,7 +94,7 @@ void main() {
       isA<AsyncValue<String>>()
           .having((s) => s.isLoading, 'isLoading', true)
           .having((s) => s.value, 'value', 'data'),
-      const AsyncValue<String>.data('data'),
+      const AsyncValue<String>.data('data_new'),
     ],
   );
 
@@ -123,7 +120,7 @@ void main() {
       isA<AsyncValue<String>>()
           .having((s) => s.isLoading, 'isLoading', true)
           .having((s) => s.value, 'value', 'data'),
-      const AsyncValue<String>.data('data'),
+      const AsyncValue<String>.data('data_new'),
     ],
   );
 
@@ -135,6 +132,44 @@ void main() {
       await AsyncCubitContainer().invalidate<_TestFutureCubit>();
     },
     expect: () => isEmpty,
+  );
+
+  test(
+    'container.invalidate<T> invalidates all cubits of type T',
+    () async {
+      final a = _TestFutureCubit(container: container);
+      final b = _TestFutureCubit(container: container);
+      await a.load();
+      await b.load();
+
+      await container.invalidate<_TestFutureCubit>();
+
+      expect(a.state, const AsyncValue<String>.data('data_new'));
+      expect(b.state, const AsyncValue<String>.data('data_new'));
+
+      await a.close();
+      await b.close();
+    },
+  );
+
+  test(
+    'container.invalidate<T> with filter only invalidates matching cubits',
+    () async {
+      final tagged = _TestFutureCubit(container: container, tag: 'target');
+      final other = _TestFutureCubit(container: container, tag: 'other');
+      await tagged.load();
+      await other.load();
+
+      await container.invalidate<_TestFutureCubit>(
+        filter: (c) => c.tag == 'target',
+      );
+
+      expect(tagged.state, const AsyncValue<String>.data('data_new'));
+      expect(other.state, const AsyncValue<String>.data('data'));
+
+      await tagged.close();
+      await other.close();
+    },
   );
 
   blocTest<_TestMutationCubit, MutationState<void>>(

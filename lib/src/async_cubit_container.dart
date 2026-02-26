@@ -1,5 +1,7 @@
 import 'package:async_cubits/async_cubits.dart';
 
+typedef InvalidateFilter<T> = bool Function(T cubit);
+
 /// {@template async_cubit_container}
 /// A registry that `AsyncCubit` instances can register into.
 ///
@@ -13,20 +15,29 @@ import 'package:async_cubits/async_cubits.dart';
 ///
 /// Example:
 /// ```dart
-/// // Both cubits share the same container.
-/// BlocProvider(create: (_) => UserCubit(container: defaultContainer)),
-/// BlocProvider(create: (_) => SaveUserCubit(container: defaultContainer)),
+/// // Both cubits share the same container (defaultInstance is used automatically).
+/// BlocProvider(create: (_) => UserCubit(repository)),
+/// BlocProvider(create: (_) => SaveUserCubit(repository)),
 ///
-/// // Inside SaveUserCubit:
+/// // Inside SaveUserCubit, call invalidate<T>() after a successful mutation:
 /// class SaveUserCubit extends MutationCubit<User, void> {
-///   SaveUserCubit()
-///       : super(container: defaultContainer, invalidates: [UserCubit]);
-///   ...
+///   SaveUserCubit(this._repository);
+///
+///   final UserRepository _repository;
+///
+///   @override
+///   Future<void> mutation(User input) => _repository.saveUser(input);
+///
+///   @override
+///   void onSuccess(void result) {
+///     super.onSuccess(result);
+///     invalidate<UserCubit>();
+///   }
 /// }
 /// ```
 /// {@endtemplate}
 class AsyncCubitContainer {
-  final Map<Type, FutureCubit<dynamic>> _cubits = {};
+  final List<FutureCubit<dynamic>> _cubits = [];
 
   /// A default shared container instance.
   ///
@@ -37,30 +48,30 @@ class AsyncCubitContainer {
   ///
   /// Called automatically by `AsyncCubit` when constructed with this container.
   void register(FutureCubit<dynamic> cubit) {
-    _cubits[cubit.runtimeType] = cubit;
+    if (!_cubits.contains(cubit)) {
+      _cubits.add(cubit);
+    }
   }
 
   /// Removes the registration for [cubit].
   ///
   /// Called automatically by `AsyncCubit.close`.
   void unregister(FutureCubit<dynamic> cubit) {
-    _cubits.remove(cubit.runtimeType);
+    _cubits.remove(cubit);
   }
 
-  /// Returns the registered cubit of type [T], or `null` if not registered.
-  T? get<T extends FutureCubit<dynamic>>() => _cubits[T] as T?;
-
-  /// Invalidates the registered cubit of type [T].
+  /// Invalidates all registered cubits of type [T] that match [filter].
   ///
   /// If no cubit of type [T] is registered this is a no-op.
-  Future<void> invalidate<T extends FutureCubit<dynamic>>() async =>
-      get<T>()?.invalidate();
-
-  /// Invalidates all registered cubits whose runtime type is in [types].
-  Future<void> invalidateAll(List<Type> types) async {
-    await Future.wait([
-      for (final type in types)
-        if (_cubits[type] case final cubit?) cubit.invalidate(),
-    ]);
+  Future<void> invalidate<T extends FutureCubit<dynamic>>({
+    bool reload = false,
+    InvalidateFilter<T>? filter,
+  }) async {
+    await Future.wait(
+      _cubits
+          .whereType<T>()
+          .where((cubit) => filter?.call(cubit) ?? true)
+          .map((cubit) => cubit.invalidate(reload: reload)),
+    );
   }
 }

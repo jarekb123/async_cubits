@@ -1,3 +1,9 @@
+# 0.4.0
+
+- `AsyncCubitContainer` now stores cubits in a `List`, allowing multiple instances of the same type to be registered simultaneously
+- `AsyncCubitContainer.invalidate<T>()` now invalidates **all** registered cubits of type `T` (previously only one per type); accepts optional `reload` and `filter` parameters
+- Removed `AsyncCubitContainer.get<T>()` and `invalidateAll(List<Type>)` — use `invalidate<T>()` directly
+
 # 0.3.0
 
 - Replaced `freezed`-based `AsyncValue` and `MutationState` with native Dart sealed classes — removes `freezed_annotation` and `build_runner` dependencies
