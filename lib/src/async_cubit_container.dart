@@ -19,7 +19,7 @@ typedef InvalidateFilter<T> = bool Function(T cubit);
 /// BlocProvider(create: (_) => UserCubit(repository)),
 /// BlocProvider(create: (_) => SaveUserCubit(repository)),
 ///
-/// // Inside SaveUserCubit, call invalidate<T>() after a successful mutation:
+/// // Inside SaveUserCubit, use performDefault to invalidate after a mutation:
 /// class SaveUserCubit extends MutationCubit<User, void> {
 ///   SaveUserCubit(this._repository);
 ///
@@ -31,13 +31,27 @@ typedef InvalidateFilter<T> = bool Function(T cubit);
 ///   @override
 ///   void onSuccess(void result) {
 ///     super.onSuccess(result);
-///     invalidate<UserCubit>();
+///     AsyncCubitContainer.performDefault<UserCubit>(
+///       runner: (c) => c.invalidate(),
+///     );
 ///   }
 /// }
 /// ```
 /// {@endtemplate}
 class AsyncCubitContainer {
   final List<BlocBase<dynamic>> _cubits = [];
+
+  /// Perform operation on all registered cubits in default container
+  /// of type [T] that match [filter].
+  ///
+  /// If no cubit of type [T] is registered this is a no-op.
+  ///
+  /// Use-case: invalidate Future Cubit
+  static Future<void> performDefault<T extends BlocBase<dynamic>>({
+    required Future<void> Function(T cubit) runner,
+    InvalidateFilter<T>? filter,
+  }) =>
+      defaultInstance.perform(runner: runner, filter: filter);
 
   /// A default shared container instance.
   ///

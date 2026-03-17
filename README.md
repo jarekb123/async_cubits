@@ -155,18 +155,11 @@ context.read<SaveUserCubit>().invoke(user);
 
 #### Invalidating a FutureCubit after a mutation
 
-Pass the same `AsyncCubitContainer` to both cubits. Inside `onSuccess`, call `container.perform<T>()` to run an operation on all registered cubits of that type. Both cubits default to `AsyncCubitContainer.defaultInstance`, so for simple apps no extra setup is needed:
+After a successful mutation, call `perform<T>()` on an `AsyncCubitContainer` to run an operation on all registered cubits of that type.
+
+For simple apps all cubits share `AsyncCubitContainer.defaultInstance` by default, so you can call `perform` on it directly. The static shorthand `AsyncCubitContainer.performDefault` does the same thing with less typing:
 
 ```dart
-class GetUserCubit extends FutureCubit<User> {
-  GetUserCubit(this._userRepository);
-
-  final UserRepository _userRepository;
-
-  Future<void> load() => performLoad(_userRepository.getUser);
-  Future<void> refresh() => performRefresh(_userRepository.getUser);
-}
-
 class SaveUserCubit extends MutationCubit<User, void> {
   SaveUserCubit(this._userRepository);
 
@@ -178,7 +171,14 @@ class SaveUserCubit extends MutationCubit<User, void> {
   @override
   void onSuccess(void result) {
     super.onSuccess(result);
-    container.perform<GetUserCubit>(runner: (c) => c.invalidate());
+    // Using the default instance directly:
+    AsyncCubitContainer.defaultInstance.perform<GetUserCubit>(
+      runner: (c) => c.invalidate(),
+    );
+    // Or with the static shorthand:
+    AsyncCubitContainer.performDefault<GetUserCubit>(
+      runner: (c) => c.invalidate(),
+    );
   }
 }
 ```
@@ -186,7 +186,7 @@ class SaveUserCubit extends MutationCubit<User, void> {
 `perform<T>()` runs the `runner` on **all** registered cubits of type `T`. Use the optional `filter` parameter to target a specific instance:
 
 ```dart
-container.perform<GetUserByIdCubit>(
+AsyncCubitContainer.performDefault<GetUserByIdCubit>(
   runner: (c) => c.invalidate(),
   filter: (c) => c.id == userId,
 );
@@ -195,20 +195,40 @@ container.perform<GetUserByIdCubit>(
 For an optimistic update before the refresh fetch completes, pass `optimisticRefresh` to `invalidate`:
 
 ```dart
-container.perform<GetUserCubit>(
+AsyncCubitContainer.performDefault<GetUserCubit>(
   runner: (c) => c.invalidate(
     optimisticRefresh: (current) => current.copyWith(name: input.name),
   ),
 );
 ```
 
-For feature modules with isolated lifecycles, create a dedicated container and pass it explicitly:
+For feature modules with isolated lifecycles, create a dedicated container and pass it explicitly to both cubits:
 
 ```dart
 final container = AsyncCubitContainer();
 
 BlocProvider(create: (_) => GetUserCubit(_repo, container: container)),
 BlocProvider(create: (_) => SaveUserCubit(_repo, container: container)),
+```
+
+Inside the mutation cubit, hold a reference to the container and call `perform` on it:
+
+```dart
+class SaveUserCubit extends MutationCubit<User, void> {
+  SaveUserCubit(this._userRepository, this._container);
+
+  final UserRepository _userRepository;
+  final AsyncCubitContainer _container;
+
+  @override
+  Future<void> mutation(User input) => _userRepository.saveUser(input);
+
+  @override
+  void onSuccess(void result) {
+    super.onSuccess(result);
+    _container.perform<GetUserCubit>(runner: (c) => c.invalidate());
+  }
+}
 ```
 
 `MutationCubit` emits `MutationState<T>`, a sealed class with four subtypes:

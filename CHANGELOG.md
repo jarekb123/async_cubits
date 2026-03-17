@@ -1,3 +1,7 @@
+# 0.5.1
+
+- Added `AsyncCubitContainer.performDefault<T>()` static shorthand for `AsyncCubitContainer.defaultInstance.perform<T>()`
+
 # 0.5.0
 
 - **Breaking**: `AsyncCubitContainer.invalidate<T>()` replaced by `perform<T>({required runner, filter})` — accepts any `BlocBase` subtype and executes an arbitrary async `runner` on each matching cubit
