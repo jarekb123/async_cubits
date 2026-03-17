@@ -1,4 +1,4 @@
-import 'package:async_cubits/async_cubits.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 typedef InvalidateFilter<T> = bool Function(T cubit);
 
@@ -37,7 +37,7 @@ typedef InvalidateFilter<T> = bool Function(T cubit);
 /// ```
 /// {@endtemplate}
 class AsyncCubitContainer {
-  final List<FutureCubit<dynamic>> _cubits = [];
+  final List<BlocBase<dynamic>> _cubits = [];
 
   /// A default shared container instance.
   ///
@@ -47,7 +47,7 @@ class AsyncCubitContainer {
   /// Registers [cubit] under its runtime type.
   ///
   /// Called automatically by `AsyncCubit` when constructed with this container.
-  void register(FutureCubit<dynamic> cubit) {
+  void register(BlocBase<dynamic> cubit) {
     if (!_cubits.contains(cubit)) {
       _cubits.add(cubit);
     }
@@ -56,22 +56,24 @@ class AsyncCubitContainer {
   /// Removes the registration for [cubit].
   ///
   /// Called automatically by `AsyncCubit.close`.
-  void unregister(FutureCubit<dynamic> cubit) {
+  void unregister(BlocBase<dynamic> cubit) {
     _cubits.remove(cubit);
   }
 
-  /// Invalidates all registered cubits of type [T] that match [filter].
+  /// Perform operation on all registered cubits of type [T] that match [filter].
   ///
   /// If no cubit of type [T] is registered this is a no-op.
-  Future<void> invalidate<T extends FutureCubit<dynamic>>({
-    bool reload = false,
+  ///
+  /// Use-case: invalidate Future Cubit
+  Future<void> perform<T extends BlocBase<dynamic>>({
+    required Future<void> Function(T cubit) runner,
     InvalidateFilter<T>? filter,
   }) async {
     await Future.wait(
       _cubits
           .whereType<T>()
           .where((cubit) => filter?.call(cubit) ?? true)
-          .map((cubit) => cubit.invalidate(reload: reload)),
+          .map((cubit) => runner(cubit)),
     );
   }
 }

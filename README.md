@@ -155,7 +155,7 @@ context.read<SaveUserCubit>().invoke(user);
 
 #### Invalidating a FutureCubit after a mutation
 
-Pass the same `AsyncCubitContainer` to both cubits so that after a successful mutation you can call `invalidate<T>()` to refresh the related `FutureCubit`. Both cubits default to `AsyncCubitContainer.defaultInstance`, so for simple apps no extra setup is needed:
+Pass the same `AsyncCubitContainer` to both cubits. Inside `onSuccess`, call `container.perform<T>()` to run an operation on all registered cubits of that type. Both cubits default to `AsyncCubitContainer.defaultInstance`, so for simple apps no extra setup is needed:
 
 ```dart
 class GetUserCubit extends FutureCubit<User> {
@@ -178,15 +178,28 @@ class SaveUserCubit extends MutationCubit<User, void> {
   @override
   void onSuccess(void result) {
     super.onSuccess(result);
-    invalidate<GetUserCubit>();
+    container.perform<GetUserCubit>(runner: (c) => c.invalidate());
   }
 }
 ```
 
-`invalidate<T>()` invalidates **all** registered cubits of type `T`. Use the optional `filter` parameter to target a specific instance:
+`perform<T>()` runs the `runner` on **all** registered cubits of type `T`. Use the optional `filter` parameter to target a specific instance:
 
 ```dart
-invalidate<GetUserByIdCubit>(filter: (cubit) => cubit.id == userId);
+container.perform<GetUserByIdCubit>(
+  runner: (c) => c.invalidate(),
+  filter: (c) => c.id == userId,
+);
+```
+
+For an optimistic update before the refresh fetch completes, pass `optimisticRefresh` to `invalidate`:
+
+```dart
+container.perform<GetUserCubit>(
+  runner: (c) => c.invalidate(
+    optimisticRefresh: (current) => current.copyWith(name: input.name),
+  ),
+);
 ```
 
 For feature modules with isolated lifecycles, create a dedicated container and pass it explicitly:

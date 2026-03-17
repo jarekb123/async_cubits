@@ -75,14 +75,35 @@ abstract class FutureCubit<T> extends AsyncCubit<T> {
     }
   }
 
-  /// Invalidates the cubit by re-running the last future as a refresh.
+  /// Invalidates the cubit by re-running the last future.
   ///
-  /// If no future has been run yet, do nothing
-  Future<void> invalidate({bool reload = false}) {
+  /// Does nothing if no future has been run yet.
+  ///
+  /// When [reload] is `true`, behaves like [performLoad]: clears the previous
+  /// value and emits a plain loading state before fetching.
+  ///
+  /// When [reload] is `false` (default), behaves like [performRefresh]: keeps
+  /// the previous value visible during the fetch.
+  ///
+  /// [optimisticRefresh] is ignored when [reload] is `true`. Otherwise, if the
+  /// current state has a value, it is called with that value and the result is
+  /// emitted immediately before the fetch begins — giving the UI an instant
+  /// optimistic update. The optimistic value is then replaced by the real
+  /// result (or an error) once the future completes.
+  Future<void> invalidate({
+    bool reload = false,
+    T Function(T currentValue)? optimisticRefresh,
+  }) {
     if (_lastFuture case final last?) {
       if (reload) {
         return performLoad(last);
       } else {
+        if (optimisticRefresh != null) {
+          final current = state.value;
+          if (current != null) {
+            emitMergeWithPrevious(AsyncValue.data(optimisticRefresh(current)));
+          }
+        }
         return performRefresh(last);
       }
     }

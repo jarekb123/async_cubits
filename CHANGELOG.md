@@ -1,3 +1,9 @@
+# 0.5.0
+
+- **Breaking**: `AsyncCubitContainer.invalidate<T>()` replaced by `perform<T>({required runner, filter})` — accepts any `BlocBase` subtype and executes an arbitrary async `runner` on each matching cubit
+- **Breaking**: `MutationCubit.invalidate<T>()` removed — use `container.perform<T>(runner: (c) => c.invalidate())` inside `onSuccess` instead
+- `FutureCubit.invalidate` gains `optimisticRefresh` parameter: emits an optimistic value immediately before the refresh fetch begins; no-op when `reload: true`
+
 # 0.4.0
 
 - `AsyncCubitContainer` now stores cubits in a `List`, allowing multiple instances of the same type to be registered simultaneously

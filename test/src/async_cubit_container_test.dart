@@ -36,11 +36,12 @@ class _MockApi extends Mock implements _Api {}
 class _TestMutationCubit extends MutationCubit<String, void> {
   _TestMutationCubit({
     required _Api api,
-    required AsyncCubitContainer container,
+    required this.container,
   })  : _api = api,
-        super(container: container);
+        super();
 
   final _Api _api;
+  final AsyncCubitContainer container;
 
   @override
   Future<void> mutation(String input) => _api.save(input);
@@ -48,7 +49,9 @@ class _TestMutationCubit extends MutationCubit<String, void> {
   @override
   void onSuccess(void result) {
     super.onSuccess(result);
-    invalidate<_TestFutureCubit>();
+    container.perform<_TestFutureCubit>(
+      runner: (cubit) => cubit.invalidate(),
+    );
   }
 }
 
@@ -73,7 +76,9 @@ void main() {
     verify: (_) async {
       // After close, invalidate should be a no-op (nothing to invalidate).
       await expectLater(
-        container.invalidate<_TestFutureCubit>(),
+        container.perform<_TestFutureCubit>(
+          runner: (cubit) => cubit.invalidate(),
+        ),
         completes,
       );
     },
@@ -108,41 +113,28 @@ void main() {
   );
 
   blocTest<_TestFutureCubit, AsyncValue<String>>(
-    'container.invalidate<T> re-runs the last future on the cubit',
-    build: () => _TestFutureCubit(container: container),
-    act: (cubit) async {
-      await cubit.load();
-      await container.invalidate<_TestFutureCubit>();
-    },
-    expect: () => [
-      isA<AsyncValue<String>>().having((s) => s.isLoading, 'isLoading', true),
-      const AsyncValue<String>.data('data'),
-      isA<AsyncValue<String>>()
-          .having((s) => s.isLoading, 'isLoading', true)
-          .having((s) => s.value, 'value', 'data'),
-      const AsyncValue<String>.data('data_new'),
-    ],
-  );
-
-  blocTest<_TestFutureCubit, AsyncValue<String>>(
-    'container.invalidate<T> is a no-op when cubit is not registered',
+    'container.perform<T> is a no-op when cubit is not registered',
     build: () => _TestFutureCubit(container: container),
     act: (_) async {
       // Use a fresh container that has no cubit registered.
-      await AsyncCubitContainer().invalidate<_TestFutureCubit>();
+      await AsyncCubitContainer().perform<_TestFutureCubit>(
+        runner: (cubit) => cubit.invalidate(),
+      );
     },
     expect: () => isEmpty,
   );
 
   test(
-    'container.invalidate<T> invalidates all cubits of type T',
+    'container.perform<T> performs operations on all cubits of type T',
     () async {
       final a = _TestFutureCubit(container: container);
       final b = _TestFutureCubit(container: container);
       await a.load();
       await b.load();
 
-      await container.invalidate<_TestFutureCubit>();
+      await container.perform<_TestFutureCubit>(
+        runner: (cubit) => cubit.invalidate(),
+      );
 
       expect(a.state, const AsyncValue<String>.data('data_new'));
       expect(b.state, const AsyncValue<String>.data('data_new'));
@@ -153,14 +145,15 @@ void main() {
   );
 
   test(
-    'container.invalidate<T> with filter only invalidates matching cubits',
+    'container.perform<T> with filter only perform operations on matching cubits',
     () async {
       final tagged = _TestFutureCubit(container: container, tag: 'target');
       final other = _TestFutureCubit(container: container, tag: 'other');
       await tagged.load();
       await other.load();
 
-      await container.invalidate<_TestFutureCubit>(
+      await container.perform<_TestFutureCubit>(
+        runner: (cubit) => cubit.invalidate(),
         filter: (c) => c.tag == 'target',
       );
 
