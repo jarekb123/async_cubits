@@ -1,3 +1,9 @@
+# 0.6.0
+
+- **Breaking**: `MutationSuccess<T>` is now `MutationSuccess<I, T>` — holds both the `input` passed to `invoke` and the `result`
+- **Breaking**: `onSuccess(T result)` is now `onSuccess(I input, T result)`
+- **Breaking**: `MutationState` factory constructors removed — use concrete classes directly (`MutationIdle()`, `MutationLoading()`, `MutationSuccess(input, result)`, `MutationFailure(error, stackTrace)`)
+
 # 0.5.1
 
 - Added `AsyncCubitContainer.performDefault<T>()` static shorthand for `AsyncCubitContainer.defaultInstance.perform<T>()`

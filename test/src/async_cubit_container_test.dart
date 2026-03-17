@@ -47,8 +47,8 @@ class _TestMutationCubit extends MutationCubit<String, void> {
   Future<void> mutation(String input) => _api.save(input);
 
   @override
-  void onSuccess(void result) {
-    super.onSuccess(result);
+  void onSuccess(String input, void result) {
+    super.onSuccess(input, result);
     container.perform<_TestFutureCubit>(
       runner: (cubit) => cubit.invalidate(),
     );
@@ -186,8 +186,8 @@ void main() {
       await futureCubit.close();
     },
     expect: () => [
-      const MutationState<void>.loading(),
-      const MutationState<void>.success(null),
+      const MutationLoading<void>(),
+      const MutationSuccess<String, void>('input', null),
     ],
   );
 

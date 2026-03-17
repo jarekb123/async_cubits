@@ -34,8 +34,8 @@ void main() {
       build: () => _TestMutationCubit(backend),
       act: (cubit) => cubit.invoke('input'),
       expect: () => [
-        const MutationState<int>.loading(),
-        const MutationState<int>.success(1),
+        const MutationLoading<int>(),
+        const MutationSuccess<String, int>('input', 1),
       ],
     );
 

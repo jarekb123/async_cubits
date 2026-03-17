@@ -169,8 +169,8 @@ class SaveUserCubit extends MutationCubit<User, void> {
   Future<void> mutation(User input) => _userRepository.saveUser(input);
 
   @override
-  void onSuccess(void result) {
-    super.onSuccess(result);
+  void onSuccess(User input, void result) {
+    super.onSuccess(input, result);
     // Using the default instance directly:
     AsyncCubitContainer.defaultInstance.perform<GetUserCubit>(
       runner: (c) => c.invalidate(),
@@ -192,14 +192,18 @@ AsyncCubitContainer.performDefault<GetUserByIdCubit>(
 );
 ```
 
-For an optimistic update before the refresh fetch completes, pass `optimisticRefresh` to `invalidate`:
+For an optimistic update before the refresh fetch completes, pass `optimisticRefresh` to `invalidate`. The `input` parameter is now available directly in `onSuccess`:
 
 ```dart
-AsyncCubitContainer.performDefault<GetUserCubit>(
-  runner: (c) => c.invalidate(
-    optimisticRefresh: (current) => current.copyWith(name: input.name),
-  ),
-);
+@override
+void onSuccess(User input, void result) {
+  super.onSuccess(input, result);
+  AsyncCubitContainer.performDefault<GetUserCubit>(
+    runner: (c) => c.invalidate(
+      optimisticRefresh: (current) => current.copyWith(name: input.name),
+    ),
+  );
+}
 ```
 
 For feature modules with isolated lifecycles, create a dedicated container and pass it explicitly to both cubits:
@@ -224,8 +228,8 @@ class SaveUserCubit extends MutationCubit<User, void> {
   Future<void> mutation(User input) => _userRepository.saveUser(input);
 
   @override
-  void onSuccess(void result) {
-    super.onSuccess(result);
+  void onSuccess(User input, void result) {
+    super.onSuccess(input, result);
     _container.perform<GetUserCubit>(runner: (c) => c.invalidate());
   }
 }
@@ -235,10 +239,10 @@ class SaveUserCubit extends MutationCubit<User, void> {
 
 | State | Type | Description |
 |---|---|---|
-| Idle | `MutationIdle` | Initial state — mutation not yet invoked |
-| Loading | `MutationLoading` | Mutation in progress |
-| Success | `MutationSuccess` | Mutation completed — holds `result` |
-| Failure | `MutationFailure` | Mutation failed — holds `error` and `stackTrace` |
+| Idle | `MutationIdle<O>` | Initial state — mutation not yet invoked |
+| Loading | `MutationLoading<O>` | Mutation in progress |
+| Success | `MutationSuccess<I, O>` | Mutation completed — holds `input` and `result` |
+| Failure | `MutationFailure<O>` | Mutation failed — holds `error` and `stackTrace` |
 
 Use pattern matching or the `is` checks (`isLoading`, `isSuccess`, `isFailure`) to react to state changes:
 

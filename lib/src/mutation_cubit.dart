@@ -8,14 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// invoked by the [invoke] method.
 ///
 /// Flow:
-/// 1. Initially the cubit is in the [MutationState.idle] state, which means
+/// 1. Initially the cubit is in the [MutationIdle] state, which means
 /// that mutation has not been called yet.
 /// 2. When the [mutation] method is called, the cubit is
-/// in the [MutationState.loading] state.
+/// in the [MutationLoading] state.
 /// 3. When the mutation is successful, the cubit is
-/// in the [MutationState.success] state.
+/// in the [MutationSuccess] state.
 /// 4. When the mutation fails, the cubit is in
-/// the [MutationState.failure] state.
+/// the [MutationFailure] state.
 ///
 /// If the [canRetry] getter returns true and mutation fails, the [invoke]
 /// method can be called to retry the mutation.
@@ -32,8 +32,8 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
   void onChange(Change<MutationState<O>> change) {
     super.onChange(change);
     final nextState = change.nextState;
-    if (nextState is MutationSuccess<O>) {
-      onSuccess(nextState.result);
+    if (nextState is MutationSuccess<I, O>) {
+      onSuccess(nextState.input, nextState.result);
     } else if (nextState is MutationFailure<O>) {
       AsyncCubitsLogger.error(
         debugKey,
@@ -73,17 +73,17 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
       return;
     }
 
-    emit(MutationState<O>.loading());
+    emit(MutationLoading<O>());
     try {
       final result = await mutation(input);
-      emit(MutationState<O>.success(result));
+      emit(MutationSuccess<I, O>(input, result));
     } catch (e, stackTrace) {
-      emit(MutationState<O>.failure(e, stackTrace));
+      emit(MutationFailure<O>(e, stackTrace));
     }
   }
 
   /// Called when the mutation is successful.
-  void onSuccess(O result) {
+  void onSuccess(I input, O result) {
     AsyncCubitsLogger.info(debugKey, 'Mutation successful');
   }
 }
@@ -92,38 +92,13 @@ abstract class MutationCubit<I, O> extends Cubit<MutationState<O>> {
 sealed class MutationState<T> {
   const MutationState();
 
-  /// The cubit is in the `idle` state, which means
-  /// that mutation has not been invoked yet.
-  const factory MutationState.idle() = MutationIdle<T>;
-
-  /// {@template mutation_state_loading}
-  /// The cubit is in the `loading` state, which means
-  /// that the mutation is invoked and is currently in progress.
-  /// {@endtemplate}
-  const factory MutationState.loading() = MutationLoading<T>;
-
-  /// {@template mutation_state_success}
-  /// The cubit is in the `success` state, which means
-  /// that the mutation was successful.
-  /// {@endtemplate}
-  const factory MutationState.success(T result) = MutationSuccess<T>;
-
-  /// {@template mutation_state_failure}
-  /// The cubit is in the `failure` state, which means
-  /// that the mutation failed.
-  /// {@endtemplate}
-  const factory MutationState.failure(
-    Object error,
-    StackTrace stackTrace,
-  ) = MutationFailure<T>;
-
-  /// {@macro mutation_state_loading}
+  /// Whether the mutation is in progress.
   bool get isLoading => this is MutationLoading<T>;
 
-  /// {@macro mutation_state_success}
-  bool get isSuccess => this is MutationSuccess<T>;
+  /// Whether the mutation completed successfully.
+  bool get isSuccess => this is MutationSuccess;
 
-  /// {@macro mutation_state_failure}
+  /// Whether the mutation failed.
   bool get isFailure => this is MutationFailure<T>;
 }
 
@@ -163,9 +138,12 @@ final class MutationLoading<T> extends MutationState<T> {
 
 /// The cubit is in the `success` state.
 @immutable
-final class MutationSuccess<T> extends MutationState<T> {
-  /// Creates a [MutationSuccess] state with the given [result].
-  const MutationSuccess(this.result);
+final class MutationSuccess<I, T> extends MutationState<T> {
+  /// Creates a [MutationSuccess] state with the given [input] and [result].
+  const MutationSuccess(this.input, this.result);
+
+  /// The input that was passed to the mutation.
+  final I input;
 
   /// The result of the successful mutation.
   final T result;
@@ -173,13 +151,16 @@ final class MutationSuccess<T> extends MutationState<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MutationSuccess<T> && other.result == result;
+      other is MutationSuccess<I, T> &&
+          other.input == input &&
+          other.result == result;
 
   @override
-  int get hashCode => result.hashCode;
+  int get hashCode => Object.hash(input, result);
 
   @override
-  String toString() => 'MutationState<$T>.success(result: $result)';
+  String toString() =>
+      'MutationState<$T>.success(input: $input, result: $result)';
 }
 
 /// The cubit is in the `failure` state.
